@@ -71,6 +71,11 @@ HUD:
    - Edificis Tier 2: `cost = (2 × cost base) + 10 circuits avançats`.
    - Edificis Tier 3: `cost = (2 × cost base) + 8 unitats de processament`.
 
+
+## Pantallassu
+![Captura del joc](public/jocautotier3.png)
+
+
 ## Receptes i edificis
 | Edifici | Tier | Cost base | Entrades | Sortides |
 |---------|------|-----------|----------|----------|
