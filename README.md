@@ -1,6 +1,5 @@
 # Joc Auto 2D (HTML/JS)
 
-![Captura del joc](public/jocauto.png)
 
 Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i JavaScript modular. Permet extraure recursos de vetes, transportar-los amb cintes i processar-los en màquines per obtenir productes més avançats.
 
@@ -62,6 +61,13 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
    - Es desbloquegen nous edificis (Miner de carbó, Farga d’acer i Assembler avançat).
    - El panell de construcció mostra els edificis de Tier 2 i, si encara no els tens disponibles, indica “Necessita Tier 2”.
 3. **Tier 2**: Pots explotar carbó per combinar-lo amb planxes de ferro i obtenir `Planxa d'acer`, imprescindible per fabricar `Circuit avançat` i, per tant, per progressar cap al següent tier.
+
+## Tiers
+![Captura del joc](public/jocauto.png)
+tier1
+
+![Captura del joc](public/jocautotier2.png)
+tier2
 
 ## Receptes i edificis
 | Edifici | Tier | Cost | Funció | Entrades | Sortides |
