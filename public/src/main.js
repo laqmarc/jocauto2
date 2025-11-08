@@ -34,3 +34,15 @@ engine.registerSystem(new InspectionSystem(worldState));
 engine.registerSystem(new UpgradeSystem(worldState));
 
 engine.start();
+if (typeof console !== 'undefined') {
+  console.log(`
+      ██╗ ██████╗  ██████╗ 
+      ██║██╔═══██╗██╔════╝ 
+      ██║██║   ██║██║  
+ ██   ██║██║   ██║██║   
+ ╚█████╔╝╚██████╔╝╚██████╗
+  ╚════╝  ╚═════╝  ╚═════╝ 
+Benvingut/da a JOC – segueix construint!
+Fet per quexulo
+`);
+}
