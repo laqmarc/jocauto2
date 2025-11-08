@@ -98,6 +98,13 @@ export class UpgradeSystem {
       };
     }
 
+    if ((def.requiredTier || 1) >= 3) {
+      return {
+        cost: mergeCosts(multiplyCost(def.cost, 2), { processing_unit: 8 }),
+        label,
+      };
+    }
+
     if ((def.requiredTier || 1) >= 2) {
       return {
         cost: mergeCosts(multiplyCost(def.cost, 2), { advanced_circuit: 10 }),
@@ -117,3 +124,4 @@ export class UpgradeSystem {
     });
   }
 }
+

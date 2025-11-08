@@ -8,7 +8,7 @@ export const resourceInfo = {
   iron_plate: {
     label: 'Planxa de ferro',
     color: '#f2f2f2',
-     icon: '⬜',
+    icon: '⬜',
   },
   copper_ore: {
     label: 'Mineral de coure',
@@ -51,6 +51,33 @@ export const resourceInfo = {
     label: 'Circuit avançat',
     color: '#c084fc',
     icon: '🔷',
+  },
+  oil: {
+    label: 'Petroli',
+    color: '#1f2a38',
+    isField: true,
+    icon: '🛢️',
+  },
+  plastic: {
+    label: 'Plàstic',
+    color: '#f7f1e3',
+    icon: '🧪',
+  },
+  quartz: {
+    label: 'Quars',
+    color: '#dfe6e9',
+    isField: true,
+    icon: '💎',
+  },
+  silicon: {
+    label: 'Silici',
+    color: '#b2bec3',
+    icon: '🔹',
+  },
+  processing_unit: {
+    label: 'Unitat de processament',
+    color: '#6c5ce7',
+    icon: '🟪',
   },
 };
 
@@ -95,6 +122,24 @@ export const recipes = {
     input: { circuit_board: 1, steel_plate: 1 },
     output: { advanced_circuit: 1 },
     duration: 6,
+    outputMode: 'inventory',
+  },
+  plastic: {
+    input: { oil: 2, coal: 1 },
+    output: { plastic: 1 },
+    duration: 5,
+    outputMode: 'belt',
+  },
+  silicon: {
+    input: { quartz: 2 },
+    output: { silicon: 1 },
+    duration: 4,
+    outputMode: 'belt',
+  },
+  processing_unit: {
+    input: { plastic: 1, silicon: 1, advanced_circuit: 1 },
+    output: { processing_unit: 1 },
+    duration: 7,
     outputMode: 'inventory',
   },
 };

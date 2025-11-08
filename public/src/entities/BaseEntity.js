@@ -142,10 +142,13 @@ export class BaseEntity {
 
   drawIOLabel(ctx, x, y, letter) {
     ctx.save();
-    ctx.font = 'bold 11px "Segoe UI", sans-serif';
+    ctx.font = 'bold 16px "Segoe UI", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.lineWidth = 0.4;
+    ctx.translate(0, 0);
+    ctx.scale(1, 1);
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 0.8;
     ctx.strokeStyle = '#000';
     ctx.strokeText(letter, x, y);
     ctx.fillStyle = '#ffffff';

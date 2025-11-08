@@ -24,6 +24,10 @@ export class UpgradePanel {
         label: 'Edificis Tier 2',
         description: 'Cost = 2× cost base + 10 circuits avançats',
       },
+      {
+        label: 'Edificis Tier 3',
+        description: 'Cost = 2× cost base + 8 unitats de processament',
+      },
     ];
     data.forEach((entry) => {
       const item = document.createElement('li');

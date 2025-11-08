@@ -42,12 +42,18 @@ export class WorldState {
       coal: 0,
       steel_plate: 0,
       advanced_circuit: 0,
+      oil: 0,
+      plastic: 0,
+      quartz: 0,
+      silicon: 0,
+      processing_unit: 0,
     };
     this.inventory = { ...this.initialInventory };
     this.progression = {
       tier: 1,
       milestones: {
         tier2Unlocked: false,
+        tier3Unlocked: false,
       },
     };
     this.events = new Map();
@@ -245,6 +251,7 @@ export class WorldState {
       tier: 1,
       milestones: {
         tier2Unlocked: false,
+        tier3Unlocked: false,
       },
     };
   }
@@ -258,6 +265,7 @@ export class WorldState {
       tier: progress.tier ?? 1,
       milestones: {
         tier2Unlocked: Boolean(progress.milestones?.tier2Unlocked),
+        tier3Unlocked: Boolean(progress.milestones?.tier3Unlocked),
       },
     };
   }
@@ -292,6 +300,33 @@ export class WorldState {
       valid: true,
       action: 'milestone',
       message: 'Milestone: 100 circuits! Vetes de carbó desbloquejades.',
+    });
+    this.resourcePanel?.refreshLegend();
+    this.recipePanel?.render();
+    this.refreshPanels();
+    this.emit('tier:changed', { tier: this.progression.tier });
+  }
+
+  unlockTier3() {
+    if (this.progression.milestones.tier3Unlocked) {
+      return;
+    }
+    this.progression.tier = 3;
+    this.progression.milestones.tier3Unlocked = true;
+    this.scatterResourceDeposits('oil', {
+      clusters: Math.max(2, Math.round((this.width * this.height) * 0.008)),
+      radius: 4,
+      density: 0.55,
+    });
+    this.scatterResourceDeposits('quartz', {
+      clusters: Math.max(3, Math.round((this.width * this.height) * 0.01)),
+      radius: 3,
+      density: 0.6,
+    });
+    this.statusPanel?.showFeedback({
+      valid: true,
+      action: 'milestone',
+      message: 'Milestone: 100 circuits avançats! Tier 3 desbloquejat amb petroli i quars.',
     });
     this.resourcePanel?.refreshLegend();
     this.recipePanel?.render();
@@ -409,13 +444,15 @@ export class WorldState {
         }
         const color = resourceInfo[resource]?.color || '#4b5961';
         ctx.fillStyle = color;
-        if (resource === 'iron_ore' || resource === 'copper_ore' || resource === 'coal') {
+        if (resource === 'iron_ore' || resource === 'copper_ore' || resource === 'coal' || resource === 'quartz') {
           ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
           ctx.globalAlpha = 0.6;
           if (resource === 'iron_ore') {
             ctx.strokeStyle = '#f2f2f2';
           } else if (resource === 'copper_ore') {
             ctx.strokeStyle = '#ffb347';
+          } else if (resource === 'quartz') {
+            ctx.strokeStyle = '#dfe6e9';
           } else {
             ctx.strokeStyle = '#6b7280';
             ctx.setLineDash([4, 3]);

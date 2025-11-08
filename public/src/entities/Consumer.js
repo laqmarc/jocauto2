@@ -56,11 +56,16 @@ export class Consumer extends BaseEntity {
     if (this.progress <= 0) {
       return;
     }
-    const px = this.position.x * tileSize + 4;
-    const py = this.position.y * tileSize + tileSize - 6;
-    const width = (tileSize - 8) * Math.min(1, this.progress / (recipes[this.recipeId]?.duration || 1));
-    ctx.fillStyle = '#ffe066';
-    ctx.fillRect(px, py, width, 2);
+    const duration = recipes[this.recipeId]?.duration || 1;
+    const pct = Math.min(1, this.progress / duration);
+    const px = this.position.x * tileSize + 6;
+    const py = this.position.y * tileSize + tileSize - 10;
+    const width = (tileSize - 12) * pct;
+    ctx.fillStyle = 'rgba(255, 224, 102, 0.9)';
+    ctx.fillRect(px, py, width, 6);
+    ctx.strokeStyle = '#ffe066';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px, py, tileSize - 12, 6);
   }
 
   deliverOutputs(recipe, state) {

@@ -46,6 +46,7 @@ p.initialinfo a {
   flex-direction: row;
   gap: 15px;
   width: 100%;
+  align-items: flex-start;
 }
 
 .leftview {
@@ -102,9 +103,9 @@ p.initialinfo a {
 #controls-panel,
 section#recipe-panel,
 #upgrade-panel {
-    margin-top: 1rem;
-    overflow-y: auto;
-    margin-bottom: 3rem;
+  margin-top: 1rem;
+  overflow-y: auto;
+  margin-bottom: 3rem;
 }
 
 .bottom {
@@ -147,11 +148,11 @@ section#recipe-panel,
 }
 
 #tutorial-panel {
-    min-height: inherit;
-    border: 1px solid #2c4854;
-    padding: 2rem 1rem;
-    background: #13232c;
-    margin-top: 1rem;
+  min-height: inherit;
+  border: 1px solid #2c4854;
+  padding: 2rem 1rem;
+  background: #13232c;
+  margin-top: 1rem;
 }
 
 .tutorial-body {
@@ -482,5 +483,3 @@ section#recipe-panel,
 #resource-tooltip.hidden {
   opacity: 0;
 }
-
-

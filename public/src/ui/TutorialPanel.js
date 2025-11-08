@@ -1,23 +1,27 @@
 const steps = [
   {
-    title: '1- Benvingut a la fàbrica',
+    title: '1 · Benvingut a la fàbrica',
     body: 'Fes servir WASD per moure la càmera i localitzar vetes de ferro/coure. Amb el ratolí esquerre col·loca miners sobre cada veta.',
   },
   {
-    title: '2- Extreu i transporta',
+    title: '2 · Extreu i transporta',
     body: 'Construeix cintes des dels miners fins als forns. Prem R per girar la sortida i F per decidir per on entra el material a la cinta.',
   },
   {
-    title: '3- Processa els recursos',
+    title: '3 · Processa els recursos',
     body: 'Els forns converteixen mineral en planxes. Combina planxes de coure amb la filadora i la premsa per fabricar circuits bàsics.',
   },
   {
-    title: '4- Automatitza l’inventari',
+    title: '4 · Automatitza l’inventari',
     body: 'Els dipòsits accepten recursos pels quatre costats. Amb Q pots triar quin recurs expulsen per alimentar altres màquines.',
   },
   {
-    title: 'FI - Desbloqueja el Tier 2',
-    body: 'Arriba als 100 circuits per generar vetes de carbó i nous edificis. Recorda millorar la teva maquinària amb la tecla U.',
+    title: '5 · Tier 2',
+    body: 'Arriba als 100 circuits per generar vetes de carbó i desbloquejar nous edificis. Millora la maquinària amb la tecla U.',
+  },
+  {
+    title: '6 · Tier 3',
+    body: 'Amb 100 circuits avançats apareixen vetes de petroli i quars. Empra’ls per crear plàstic, silici i unitats de processament.',
   },
 ];
 

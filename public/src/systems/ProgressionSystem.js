@@ -2,7 +2,7 @@ export class ProgressionSystem {
   constructor(state) {
     this.state = state;
     this.tier2Target = 100;
-    this.unlocked = false;
+    this.tier3Target = 100;
   }
 
   init() {
@@ -15,18 +15,24 @@ export class ProgressionSystem {
   }
 
   onInventoryAdd({ resource }) {
-    if (resource === 'circuit_board') {
+    if (resource === 'circuit_board' || resource === 'advanced_circuit') {
       this.checkMilestones();
     }
   }
 
   checkMilestones() {
-    if (this.state.progression?.milestones?.tier2Unlocked) {
+    if (!this.state.progression?.milestones?.tier2Unlocked) {
+      const totalCircuits = this.state.inventory.circuit_board || 0;
+      if (totalCircuits >= this.tier2Target) {
+        this.state.unlockTier2?.();
+      }
       return;
     }
-    const totalCircuits = this.state.inventory.circuit_board || 0;
-    if (totalCircuits >= this.tier2Target) {
-      this.state.unlockTier2?.();
+    if (!this.state.progression?.milestones?.tier3Unlocked) {
+      const totalAdv = this.state.inventory.advanced_circuit || 0;
+      if (totalAdv >= this.tier3Target) {
+        this.state.unlockTier3?.();
+      }
     }
   }
 }

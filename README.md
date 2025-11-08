@@ -56,16 +56,20 @@ HUD:
 3. **Transporta**: cintes + `R`/`F` per casar entrades i sortides.
 4. **Processa**: forns → planxes, filadora, premsa d’engranatges, assembler de circuits.
 5. **Recull**: finalitza en dipòsits (configura la sortida amb `Q`) o en noves màquines.
-6. **Millora**: utilitza circuits avançats per fer upgrades (`U`).
+6. **Millora**: utilitza circuits avançats per fer upgrades (`U`) i arribar al Tier 2.
+7. **Tier 3**: quan tinguis 100 circuits avançats, desbloqueja petroli i quars. Usa’ls per fabricar plàstic, silici i unitats de processament.
 
 ## Milestones i Tiers
 1. **Tier 1** – Vetes de ferro/coure + cadena bàsica fins a circuits.
 2. **Milestone (100 circuits)** – Desbloqueja el **Tier 2** (veta de carbó + edificis nous).
 3. **Tier 2** – Carbó + ferro = acer, circuits avançats, panell d’upgrades.
-4. **Upgrades** – tecla `U` (els icones mostren: franja daurada per Tier 2 i badge verd “2” per edificis millorats):
+4. **Milestone (100 circuits avançats)** – Desbloqueja el **Tier 3** (veta de petroli i quars, nous processos químics).
+5. **Tier 3** – Petroli + quars = plàstic i silici; craft de processadors.
+6. **Upgrades** – tecla `U` (els icones mostren: franja daurada per Tier 2 i badge verd “2” per edificis millorats):
    - Miners i forns: `cost = (2 × cost base) + 5 circuits avançats`.
    - Cintes: `cost = 1 planxa d’acer + 1 circuit avançat`.
    - Edificis Tier 2: `cost = (2 × cost base) + 10 circuits avançats`.
+   - Edificis Tier 3: `cost = (2 × cost base) + 8 unitats de processament`.
 
 ## Receptes i edificis
 | Edifici | Tier | Cost base | Entrades | Sortides |
@@ -80,6 +84,11 @@ HUD:
 | Miner de carbó | 2 | 18× planxes de ferro, 4× circuits | Veta de carbó | Carbó |
 | Farga d’acer | 2 | 20× planxes de ferro, 5× carbó | 1× planxa de ferro, 1× carbó | 1× planxa d’acer |
 | Assembler avançat | 2 | 10× planxes d’acer, 5× circuits | 1× planxa d’acer, 1× circuit | 1 circuit avançat |
+| Bomba de petroli | 3 | 20× planxes d’acer, 6× circuits avançats | Veta de petroli | Petroli |
+| Miner de quars | 3 | 18× planxes d’acer, 4× circuits avançats | Veta de quars | Quars |
+| Refineria de plàstic | 3 | 16× planxes d’acer, 4× circuits avançats, 5× carbó | 2× petroli, 1× carbó | 1× plàstic |
+| Cristal·litzador de silici | 3 | 14× planxes d’acer, 4× circuits avançats, 4× quars | 2× quars | 1× silici |
+| Assembler de processadors | 3 | 4× plàstic, 4× silici, 6× circuits avançats | 1× plàstic, 1× silici, 1× circuit avançat | 1 unitat de processament |
 
 Consulta `public/src/data/recipes.js` per afegir receptes o recursos nous.
 
