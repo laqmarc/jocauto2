@@ -6,19 +6,22 @@ import { ResourceTooltip } from '../ui/ResourceTooltip.js';
 import { RecipePanel } from '../ui/RecipePanel.js';
 import { ControlsPanel } from '../ui/ControlsPanel.js';
 import { UpgradePanel } from '../ui/UpgradePanel.js';
+import { TutorialPanel } from '../ui/TutorialPanel.js';
 import { resourceInfo } from '../data/recipes.js';
 import { randomResourceField } from '../data/resourceField.js';
 
 export class WorldState {
-  constructor({ canvas, width, height, tileSize }) {
+  constructor({ canvas, width, height, tileSize, viewWidth, viewHeight }) {
     this.canvas = canvas;
     this.canvasWrapper = document.getElementById('canvas-wrapper');
     this.ctx = canvas.getContext('2d');
     this.width = width;
     this.height = height;
+    this.viewWidth = viewWidth ?? width;
+    this.viewHeight = viewHeight ?? height;
     this.tileSize = tileSize;
-    this.canvas.width = width * tileSize;
-    this.canvas.height = height * tileSize;
+    this.canvas.width = this.viewWidth * tileSize;
+    this.canvas.height = this.viewHeight * tileSize;
 
     this.grid = new TileGrid(width, height);
     this.entities = new Set();
@@ -51,6 +54,7 @@ export class WorldState {
     this.lastDelta = 0;
     this.resourceField = [];
     this.resourceSeed = null;
+    this.camera = { x: 0, y: 0 };
 
     this.panels = {
       resources: document.getElementById('resource-panel'),
@@ -58,6 +62,7 @@ export class WorldState {
       controls: document.getElementById('controls-panel'),
       recipes: document.getElementById('recipe-panel'),
       upgrades: document.getElementById('upgrade-panel'),
+      tutorial: document.getElementById('tutorial-panel'),
       status: document.getElementById('status-panel'),
       debug: document.getElementById('debug-panel'),
     };
@@ -66,6 +71,7 @@ export class WorldState {
     this.recipePanel = new RecipePanel(this.panels.recipes);
     this.controlsPanel = new ControlsPanel(this.panels.controls);
     this.upgradePanel = new UpgradePanel(this.panels.upgrades);
+    this.tutorialPanel = new TutorialPanel(this.panels.tutorial);
     this.statusPanel = new StatusPanel(this.panels.status);
     this.debugPanel = new DebugPanel(this.panels.debug);
     const tooltipElement = document.getElementById('resource-tooltip');
@@ -109,8 +115,8 @@ export class WorldState {
     const rect = this.canvas.getBoundingClientRect();
     const px = event.clientX - rect.left;
     const py = event.clientY - rect.top;
-    const x = Math.floor(px / this.tileSize);
-    const y = Math.floor(py / this.tileSize);
+    const x = Math.floor(px / this.tileSize) + this.camera.x;
+    const y = Math.floor(py / this.tileSize) + this.camera.y;
     if (!this.grid.inBounds(x, y)) {
       return null;
     }
@@ -375,11 +381,15 @@ export class WorldState {
 
   render() {
     const ctx = this.ctx;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#0d161d';
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.save();
+    ctx.translate(-this.camera.x * this.tileSize, -this.camera.y * this.tileSize);
     this.drawResourceField();
     this.drawGrid();
     this.drawEntities();
+    ctx.restore();
     this.drawHover();
   }
 
@@ -388,7 +398,7 @@ export class WorldState {
       return;
     }
     const ctx = this.ctx;
-    ctx.globalAlpha = 0.2;
+    ctx.globalAlpha = 0.35;
     for (let y = 0; y < this.height; y += 1) {
       for (let x = 0; x < this.width; x += 1) {
         const resource = this.resourceField[this.resourceIndex(x, y)];
@@ -397,7 +407,29 @@ export class WorldState {
         }
         const color = resourceInfo[resource]?.color || '#4b5961';
         ctx.fillStyle = color;
-        ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+        if (resource === 'iron_ore' || resource === 'copper_ore' || resource === 'coal') {
+          ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+          ctx.globalAlpha = 0.6;
+          if (resource === 'iron_ore') {
+            ctx.strokeStyle = '#f2f2f2';
+          } else if (resource === 'copper_ore') {
+            ctx.strokeStyle = '#ffb347';
+          } else {
+            ctx.strokeStyle = '#6b7280';
+            ctx.setLineDash([4, 3]);
+          }
+          ctx.lineWidth = 2;
+          ctx.strokeRect(
+            x * this.tileSize + 3,
+            y * this.tileSize + 3,
+            this.tileSize - 6,
+            this.tileSize - 6,
+          );
+          ctx.setLineDash([]);
+          ctx.globalAlpha = 0.35;
+        } else {
+          ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+        }
       }
     }
     ctx.globalAlpha = 1;
@@ -436,29 +468,37 @@ export class WorldState {
       return;
     }
     const ctx = this.ctx;
+    const screenX = (tile.x - this.camera.x) * this.tileSize;
+    const screenY = (tile.y - this.camera.y) * this.tileSize;
+    if (screenX < -this.tileSize || screenY < -this.tileSize) {
+      return;
+    }
+    if (screenX > this.canvas.width || screenY > this.canvas.height) {
+      return;
+    }
     const color = preview
       ? preview.valid
         ? 'rgba(74, 222, 128, 0.45)'
         : 'rgba(248, 113, 113, 0.45)'
       : 'rgba(153, 209, 255, 0.35)';
     ctx.fillStyle = color;
-    ctx.fillRect(
-      tile.x * this.tileSize,
-      tile.y * this.tileSize,
-      this.tileSize,
-      this.tileSize,
-    );
+    ctx.fillRect(screenX, screenY, this.tileSize, this.tileSize);
     ctx.strokeStyle = preview
       ? preview.valid
         ? '#4ade80'
         : '#f87171'
       : '#99d1ff';
     ctx.lineWidth = 2;
-    ctx.strokeRect(
-      tile.x * this.tileSize + 1,
-      tile.y * this.tileSize + 1,
-      this.tileSize - 2,
-      this.tileSize - 2,
-    );
+    ctx.strokeRect(screenX + 1, screenY + 1, this.tileSize - 2, this.tileSize - 2);
+  }
+
+  panCamera(dx, dy) {
+    if (this.viewWidth >= this.width && this.viewHeight >= this.height) {
+      return;
+    }
+    const maxX = Math.max(0, this.width - this.viewWidth);
+    const maxY = Math.max(0, this.height - this.viewHeight);
+    this.camera.x = Math.max(0, Math.min(maxX, this.camera.x + dx));
+    this.camera.y = Math.max(0, Math.min(maxY, this.camera.y + dy));
   }
 }

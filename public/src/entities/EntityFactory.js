@@ -52,6 +52,7 @@ export function createEntityFromId(id, tile, orientation, overrides = {}) {
   }
   entity.level = overrides.level || 1;
   entity.tier = def.requiredTier || 1;
+  entity.icon = def.icon || entity.icon;
   if (typeof entity.applyLevel === 'function') {
     entity.applyLevel();
   }

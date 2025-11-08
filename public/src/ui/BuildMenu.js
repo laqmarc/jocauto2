@@ -29,6 +29,18 @@ export class BuildMenu {
       button.type = 'button';
       button.dataset.buildId = def.id;
       button.className = 'build-option';
+      let icon;
+      if (def.icon) {
+        icon = document.createElement('img');
+        icon.className = 'build-icon';
+        icon.src = def.icon;
+        icon.alt = def.label;
+      } else {
+        icon = document.createElement('span');
+        icon.className = 'build-icon';
+        icon.textContent = '⬜';
+      }
+
       const name = document.createElement('span');
       name.className = 'build-name';
       name.textContent = def.label;
@@ -37,7 +49,7 @@ export class BuildMenu {
       cost.textContent = status.unlocked
         ? this.formatCost(def.cost)
         : status.reason || 'Bloquejat';
-      button.append(name, cost);
+      button.append(icon, name, cost);
       button.addEventListener('click', () => {
         if (status.unlocked) {
           this.select(def.id);

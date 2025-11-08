@@ -39,6 +39,7 @@ export const buildableList = [
     color: '#5ac8fa',
     cost: { iron_plate: 1 },
     requiredTier: 1,
+    icon: 'assets/conveyor.svg',
   },
   {
     id: 'depot',
@@ -47,6 +48,7 @@ export const buildableList = [
     color: '#7cd67b',
     cost: { iron_plate: 4 },
     requiredTier: 1,
+    icon: 'assets/depot.svg',
   },
   {
     id: 'iron_miner',
@@ -58,6 +60,7 @@ export const buildableList = [
     cost: { iron_plate: 12 },
     requiresResource: 'iron_ore',
     requiredTier: 1,
+    icon: 'assets/iron_miner.svg',
   },
   {
     id: 'copper_miner',
@@ -69,6 +72,7 @@ export const buildableList = [
     cost: { iron_plate: 12 },
     requiresResource: 'copper_ore',
     requiredTier: 1,
+    icon: 'assets/copper_miner.svg',
   },
   {
     id: 'iron_furnace',
@@ -78,6 +82,7 @@ export const buildableList = [
     color: '#ff6f61',
     cost: { iron_plate: 10 },
     requiredTier: 1,
+    icon: 'assets/iron_furnace.svg',
   },
   {
     id: 'copper_furnace',
@@ -87,6 +92,7 @@ export const buildableList = [
     color: '#ffab76',
     cost: { iron_plate: 10 },
     requiredTier: 1,
+    icon: 'assets/copper_furnace.svg',
   },
   {
     id: 'wire_drawer',
@@ -96,6 +102,7 @@ export const buildableList = [
     color: '#ffb347',
     cost: { iron_plate: 10, copper_plate: 6 },
     requiredTier: 1,
+    icon: 'assets/wire_drawer.svg',
   },
   {
     id: 'gear_press',
@@ -105,6 +112,7 @@ export const buildableList = [
     color: '#7c9bb5',
     cost: { iron_plate: 14 },
     requiredTier: 1,
+    icon: 'assets/gear_press.svg',
   },
   {
     id: 'circuit_assembler',
@@ -115,6 +123,7 @@ export const buildableList = [
     cost: { iron_plate: 18, copper_wire: 6 },
     extraInputOffsets: [1, -1],
     requiredTier: 1,
+    icon: 'assets/circuit_assembler.svg',
   },
   {
     id: 'coal_miner',
@@ -126,6 +135,7 @@ export const buildableList = [
     cost: { iron_plate: 18, circuit_board: 4 },
     requiresResource: 'coal',
     requiredTier: 2,
+    icon: 'assets/coal_miner.svg',
   },
   {
     id: 'steel_forge',
@@ -136,6 +146,7 @@ export const buildableList = [
     cost: { iron_plate: 20, coal: 5 },
     requiredTier: 2,
     extraInputOffsets: [1, -1],
+    icon: 'assets/steel_forge.svg',
   },
   {
     id: 'advanced_assembler',
@@ -146,6 +157,7 @@ export const buildableList = [
     cost: { steel_plate: 10, circuit_board: 5 },
     requiredTier: 2,
     extraInputOffsets: [1, -1],
+    icon: 'assets/advanced_assembler.svg',
   },
 ];
 

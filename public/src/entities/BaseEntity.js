@@ -1,5 +1,20 @@
 import { directionVectors } from '../data/buildables.js';
 
+const iconCache = new Map();
+
+function loadIcon(src) {
+  if (!src) {
+    return null;
+  }
+  if (iconCache.has(src)) {
+    return iconCache.get(src);
+  }
+  const img = new Image();
+  img.src = src;
+  iconCache.set(src, img);
+  return img;
+}
+
 export class BaseEntity {
   constructor({ type, position, orientation = 'east', color = '#4da1ff' }) {
     this.type = type;
@@ -16,6 +31,7 @@ export class BaseEntity {
     ctx.fillStyle = this.color;
     ctx.fillRect(px + 4, py + 4, tileSize - 8, tileSize - 8);
     this.drawPorts(ctx, tileSize);
+    this.drawIcon(ctx, tileSize);
     if ((this.tier || 1) >= 2) {
       this.drawTierBadge(ctx, tileSize);
     }
@@ -71,6 +87,20 @@ export class BaseEntity {
 
   getIOMarkers() {
     return [];
+  }
+
+  drawIcon(ctx, tileSize) {
+    if (!this.icon) {
+      return;
+    }
+    const image = loadIcon(this.icon);
+    if (!image?.complete) {
+      return;
+    }
+    const size = tileSize * 0.55;
+    const x = this.position.x * tileSize + (tileSize - size) / 2;
+    const y = this.position.y * tileSize + (tileSize - size) / 2;
+    ctx.drawImage(image, x, y, size, size);
   }
 
   drawTierBadge(ctx, tileSize) {

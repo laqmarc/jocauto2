@@ -74,6 +74,21 @@ export class InputSystem {
       if (this.state.hoverTile) {
         this.state.emit('input:inspect', { tile: this.state.hoverTile });
       }
+    } else if (['w', 'a', 's', 'd'].includes(key)) {
+      this.handleCameraPan(key);
     }
+  }
+
+  handleCameraPan(key) {
+    const delta = {
+      w: { x: 0, y: -1 },
+      a: { x: -1, y: 0 },
+      s: { x: 0, y: 1 },
+      d: { x: 1, y: 0 },
+    }[key];
+    if (!delta) {
+      return;
+    }
+    this.state.panCamera(delta.x, delta.y);
   }
 }

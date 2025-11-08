@@ -14,9 +14,11 @@ const canvas = document.getElementById('game-canvas');
 
 const worldState = new WorldState({
   canvas,
-  width: 40,
-  height: 22,
-  tileSize: 32,
+  width: 80,
+  height: 45,
+  viewWidth: 32,
+  viewHeight: 18,
+  tileSize: 40,
 });
 
 const engine = new Engine(worldState);

@@ -88,6 +88,9 @@ body {
 
 .bottom {
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
 }
 
 .controls-list {
@@ -139,6 +142,28 @@ body {
 
 #recipe-panel.collapsible-panel.is-collapsed .recipe-content {
   display: none;
+}
+
+#tutorial-panel {
+  min-height: 160px;
+}
+
+.tutorial-body {
+  margin: 0.5rem 0 1rem;
+}
+
+.tutorial-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tutorial-nav button {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #2c4854;
+  background: #13232c;
+  color: inherit;
+  cursor: pointer;
 }
 
 .recipe-list {
@@ -323,6 +348,16 @@ body {
 
 .build-name {
   font-weight: 600;
+}
+
+.build-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+  font-size: 1.2rem;
 }
 
 .build-cost {

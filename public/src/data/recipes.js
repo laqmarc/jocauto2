@@ -3,44 +3,54 @@ export const resourceInfo = {
     label: 'Mineral de ferro',
     color: '#c26d2c',
     isField: true,
+    icon: '⛏️',
   },
   iron_plate: {
     label: 'Planxa de ferro',
     color: '#f2f2f2',
+     icon: '⬜',
   },
   copper_ore: {
     label: 'Mineral de coure',
     color: '#c2843b',
     isField: true,
+    icon: '🟠',
   },
   copper_plate: {
     label: 'Planxa de coure',
     color: '#ffbb71',
+    icon: '🟧',
   },
   copper_wire: {
     label: 'Fil de coure',
     color: '#ffa260',
+    icon: '〰️',
   },
   iron_gear: {
     label: 'Engranatge',
     color: '#d9e0eb',
+    icon: '⚙️',
   },
   circuit_board: {
     label: 'Circuit',
     color: '#8ff0c8',
+    icon: '🟩',
   },
   coal: {
     label: 'Carbó',
     color: '#3c3c3c',
     isField: true,
+    icon: '🪨',
   },
   steel_plate: {
     label: 'Planxa d\'acer',
     color: '#bcc7d3',
+    icon: '⬛',
   },
   advanced_circuit: {
     label: 'Circuit avançat',
     color: '#c084fc',
+    icon: '🔷',
   },
 };
 
