@@ -4,6 +4,7 @@ import {
   directionOrder,
   directionLabels,
   rotateDirection,
+  oppositeDirection,
 } from '../data/buildables.js';
 import { BuildMenu } from '../ui/BuildMenu.js';
 import { createEntityFromId } from '../entities/EntityFactory.js';
@@ -34,6 +35,7 @@ export class BuildSystem {
     this.state.on('input:rotate', () => this.rotate());
     this.state.on('input:cycle-conveyor', () => this.cycleConveyorInput());
     this.state.on('tier:changed', () => this.onTierChanged());
+    this.state.on('input:rotate-entity', (payload) => this.rotateEntity(payload.tile));
     this.updateOrientationLabel();
   }
 
@@ -216,5 +218,41 @@ export class BuildSystem {
     this.menu.render();
     this.menu.highlightActive();
     this.updateOrientationLabel();
+  }
+
+  rotateEntity(tile) {
+    if (!tile) {
+      return;
+    }
+    const entity = this.state.grid.get(tile.x, tile.y);
+    if (!entity) {
+      this.state.statusPanel?.showFeedback({
+        valid: false,
+        reason: 'No hi ha cap edifici per girar',
+      });
+      return;
+    }
+    const def = buildables[entity.buildId];
+    if (!def) {
+      return;
+    }
+    const currentIndex = directionOrder.indexOf(entity.orientation || 'east');
+    const nextOrientation = directionOrder[(currentIndex + 1) % directionOrder.length];
+    entity.orientation = nextOrientation;
+    if (entity.type === 'conveyor') {
+      if (entity.manualInputDirection && entity.inputDirection) {
+        entity.inputDirection = rotateDirection(entity.inputDirection, 1);
+      } else {
+        entity.inputDirection = oppositeDirection[nextOrientation];
+      }
+    }
+    if (typeof entity.onRotated === 'function') {
+      entity.onRotated();
+    }
+    this.state.statusPanel?.showFeedback({
+      valid: true,
+      action: 'rotate-entity',
+      message: `${def.label} girat cap a ${directionLabels[nextOrientation] || nextOrientation}`,
+    });
   }
 }

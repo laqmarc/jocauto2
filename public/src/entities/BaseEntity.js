@@ -60,15 +60,18 @@ export class BaseEntity {
     const centerY = this.position.y * tileSize + tileSize / 2 + vector.y * (tileSize / 2 - 6);
     const size = 6;
 
-    ctx.save();
     if (type === 'input' || type === 'input-secondary') {
+      ctx.save();
       ctx.fillStyle = type === 'input' ? 'rgba(248, 181, 129, 0.9)' : 'rgba(248, 181, 129, 0.45)';
       ctx.beginPath();
       ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = type === 'input' ? 'rgba(209, 116, 50, 0.9)' : 'rgba(209, 116, 50, 0.45)';
       ctx.stroke();
+      ctx.restore();
+      this.drawIOLabel(ctx, centerX, centerY, 'I');
     } else {
+      ctx.save();
       ctx.translate(centerX, centerY);
       const angle = Math.atan2(vector.y, vector.x);
       ctx.rotate(angle);
@@ -81,8 +84,9 @@ export class BaseEntity {
       ctx.fill();
       ctx.strokeStyle = 'rgba(30, 150, 70, 0.9)';
       ctx.stroke();
+      ctx.restore();
+      this.drawIOLabel(ctx, centerX, centerY, 'O');
     }
-    ctx.restore();
   }
 
   getIOMarkers() {
@@ -133,6 +137,19 @@ export class BaseEntity {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('2', px + 5, py + 5);
+    ctx.restore();
+  }
+
+  drawIOLabel(ctx, x, y, letter) {
+    ctx.save();
+    ctx.font = 'bold 11px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.lineWidth = 0.4;
+    ctx.strokeStyle = '#000';
+    ctx.strokeText(letter, x, y);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(letter, x, y);
     ctx.restore();
   }
 }

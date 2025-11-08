@@ -74,6 +74,10 @@ export class InputSystem {
       if (this.state.hoverTile) {
         this.state.emit('input:inspect', { tile: this.state.hoverTile });
       }
+    } else if (key === 'e') {
+      if (this.state.hoverTile) {
+        this.state.emit('input:rotate-entity', { tile: this.state.hoverTile });
+      }
     } else if (['w', 'a', 's', 'd'].includes(key)) {
       this.handleCameraPan(key);
     }

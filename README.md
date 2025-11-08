@@ -36,6 +36,7 @@ npx serve .
 - **Ratolí dret**: eliminar edifici
 - **R**: rotar orientació
 - **F**: cintes – canviar l’entrada preferida
+- **E**: girar un edifici ja col·locat
 - **W / A / S / D**: moure la càmera
 - **U**: millorar l’edifici seleccionat
 - **Q**: dipòsits – ciclar recurs sortint
