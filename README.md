@@ -1,119 +1,106 @@
 # Joc Auto 2D (HTML/JS)
 
-
-Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i JavaScript modular. Permet extraure recursos de vetes, transportar-los amb cintes i processar-los en màquines per obtenir productes més avançats. 
+Simulador 2D d’automatització inspirat en Satisfactory. Amb HTML, CSS i JavaScript modular es controla una fàbrica que extreu recursos, els processa i desbloqueja nous tiers.
 
 ## Taula de continguts
 1. [Arquitectura i tecnologia](#arquitectura-i-tecnologia)
 2. [Instal·lació i execució](#instal·lació-i-execució)
 3. [Controls i HUD](#controls-i-hud)
 4. [Flux de joc](#flux-de-joc)
-5. [Receptes i edificis](#receptes-i-edificis)
-6. [Persistència](#persistència)
-7. [Estructura del projecte](#estructura-del-projecte)
+5. [Milestones i Tiers](#milestones-i-tiers)
+6. [Receptes i edificis](#receptes-i-edificis)
+7. [Persistència](#persistència)
+8. [Estructura del projecte](#estructura-del-projecte)
+9. [Roadmap suggerit](#roadmap-sugerit)
 
 ## Arquitectura i tecnologia
-- **Client-only**: tot el joc resideix sota `public/` i es serveix com a pàgina web estàtica (`index.html` + `src/`).
-- **Mòduls ES**: la lògica està dividida en `core/` (motor i estat), `systems/`, `entities/`, `ui/` i `data/`.
-- **Canvas 2D**: renderitzat manual de la graella, entitats i recursos (ports d’entrada/sortida) per tenir control total sobre l’aspecte.
-- **Event Bus**: `WorldState` exposa `on/off/emit` per coordinar systems (input, construcció, recursos, persistència).
-- **Autoguardats**: `PersistenceSystem` serialitza inventari, entitats i vetes a `localStorage`.
+- **Client only**: tot viu dins `public/` (serveix amb qualsevol servidor estàtic).
+- **Mòduls ES6**: `core/` (motor + estat), `systems/`, `entities/`, `ui/`, `data/`.
+- **Canvas 2D**: dibuix de graella, entitats i ports I/O manualment.
+- **Event bus**: `WorldState` emet/rep esdeveniments (`input:*`, `tier:changed`, `inventory:add`...).
+- **Autoguardats**: `PersistenceSystem` serialitza inventari, vetes, entitats i progressió a `localStorage`.
 
 ## Instal·lació i execució
-1. Clona o descarrega el repo en local.
-2. Obre `public/index.html` directament al navegador (no cal servidor).
-   - Per evitar restriccions de mòduls en alguns navegadors pots llançar un servidor estàtic (`npx serve public`, `python -m http.server`, etc.).
+```bash
+git clone <repo>
+cd jocauto2/public
+# opcions
+python -m http.server 4173   # o npx serve .
+# o senzillament obre public/index.html al navegador
+```
 
 ## Controls i HUD
-- **Ratolí**:
-  - Cursor: mostra un reticle amb color segons la col·locació (blau = apuntant, verd = vàlid, vermell = invàlid).
-  - Tooltip: indica la veta detectada i l’edifici sota el cursor.
-  - Clic esquerre: col·loca l’edifici seleccionat (si el fantasma és verd).
-  - Clic dret: elimina l’estructura de la cel·la (el panell d’estat confirma l’acció o avisa si no hi havia res).
-- **Tecles**:
-- `R`: rota la sortida de l’edifici seleccionat (Nord → Est → Sud → Oest).
-- `F`: (només cintes) canvia la direcció d'entrada preferida; les cintes accepten automàticament entrades frontal i laterals, però amb `F` pots forçar quin port es destaca.
-- `U`: millora l’edifici que tens sota el cursor (si la millora està disponible i tens recursos).
-- `Q`: mentre apuntes a un `Dipòsit`, cicla quin recurs de l’inventari vols que expulsi per la sortida (cal que hi hagi stock).
-- `I`: inspecciona la casella sota el cursor i mostra un resum (veta, entitat, configuració) al panell d’estat.
+- **Ratolí esquerre**: col·locar edifici.
+- **Ratolí dret**: eliminar edifici.
+- **R**: rotar l’orientació.
+- **F**: (cintes) canviar l’entrada preferida (front / cantonades).
+- **U**: millorar l’edifici sota el cursor (si hi ha recursos).
+- **Q**: (dipòsits) cicla quin recurs de l’inventari expulsa el dipòsit.
+- **I**: inspecciona la casella (veta, entitat, configuració) i ho mostra al panell d’estat.
 
-### HUD (panell dret)
-1. **Recursos**: inventari actual i llegenda de vetes/productes.
-2. **Construcció**: selector d’edificis amb el cost detallat; mostra l’orientació actual.
-3. **Receptes**: resum d’entrades/sortides de totes les receptes disponibles.
-4. **Estat**: missatges d’èxit/error per a construccions i destruccions.
-5. **Debug**: estadístiques (FPS, entitats, cintes, ítems) + botons `Guardar` i `Reset`.
+HUD:
+1. **Recursos** + llegenda de vetes i productes.
+2. **Construcció** + panell de controls.
+3. **Receptes** (collapsible per defecte).
+4. **Upgrades** (recordatori del cost de cada millora).
+5. **Estat** i **Debug** (missatges, guardats, FPS…).
 
 ## Flux de joc
-1. **Explora vetes**: el mapa genera clústers pseudoaleatoris de ferro i coure; identifica’ls amb el tooltip o la capa translúcida.
-2. **Extreu**: col·loca un `Miner de ferro/coure` exactament sobre la veta corresponent (el reticle serà vermell si no coincideix).
-3. **Transporta**: crea cintes (`Cinta`) i gira-les amb `R` per connectar miner → màquina. Les cintes mostren entrada (cercles taronges) i sortida (fletxes verdes).
-4. **Processa**:
-   - `Forn de ferro`/`Forn de coure` produeixen mineral a planxes.
-   - `Filadora` converteix planxes de coure en fil.
-   - `Premsa d'engranatges` usa planxes de ferro per produir engranatges.
-   - `Assembler de circuits` consumeix fil de coure + planxes de ferro (recorda connectar-li dues cintes: una al port oest i l'altra a qualsevol dels ports lateral) i diposita els circuits directament a l'inventari.
-5. **Recull**: connecta la sortida de cada màquina a una cinta i finalitza-la en un `Diposit` o en una altra màquina. Els dipòsits accepten recursos pels quatre costats, els envien a l’inventari i, si els configures amb `Q`, poden tornar a expel·lir el recurs seleccionat cap a la seva cara frontal.
-6. **Gestiona recursos**: vigila el panell de recursos per assegurar-te que pots pagar el cost de nous edificis (els botons indiquen el cost exacte).
+1. **Explora**: identifica vetes de ferro/coure (tooltip, color de cel·les).
+2. **Extreu**: col·loca miners a sobre de la veta correcta.
+3. **Transporta**: cinta + `R`/`F` per connectar sortides/entrades.
+4. **Processa**: forns → planxes, filadora, premsa d’engranatges, assembler de circuits.
+5. **Recull**: finalitza en dipòsits o noves màquines (configura’n la sortida amb `Q`).
+6. **Millora**: quan tinguis circuits avançats prem `U` per accelerar la cadena.
 
-## Milestones i Tier 2
-1. **Tier 1 (inici)**: Totes les vetes disponibles són de ferro i coure. L’objectiu és construir la cadena fins a obtenir circuits (`Assembler de circuits`).
-2. **Milestone – 100 circuits**: quan l’inventari acumula 100 `Circuit`, el `ProgressionSystem` activa el **Tier 2**:
-   - Es generen noves vetes de **Carbó** sobre el mapa.
-   - Es desbloquegen nous edificis (Miner de carbó, Farga d’acer i Assembler avançat).
-   - El panell de construcció mostra els edificis de Tier 2 i, si encara no els tens disponibles, indica “Necessita Tier 2”.
-3. **Tier 2**: Pots explotar carbó per combinar-lo amb planxes de ferro i obtenir `Planxa d'acer`, imprescindible per fabricar `Circuit avançat` i, per tant, per progressar cap al següent tier.
-4. **Upgrades**: amb la tecla `U` pots promocionar miners i forns (cost = 2x cost base + 5 circuits avan�ats), cintes (1 planxa d'acer + 1 circuit avan�at) i qualsevol edifici de Tier 2 (2x cost base + 10 circuits avan�ats). Les versions nivell 2 processen m�s r�pid o transporten m�s depressa, i el joc mostra una franja daurada per als edificis de Tier 2 i un distintiu verd "2" quan estan millorats.
-
-## Tiers
-![Captura del joc](public/jocauto.png)
-tier1
-
-![Captura del joc](public/jocautotier2.png)
-tier2
+## Milestones i Tiers
+1. **Tier 1** – Vetes de ferro/coure i tota la cadena bàsica fins a circuits.
+2. **Milestone (100 circuits)** – El `ProgressionSystem` desbloqueja el **Tier 2**: noves vetes de carbó i edificis.
+3. **Tier 2** – Carbó + ferro ⇒ acer, circuits avançats i panell d’upgrades.
+4. **Upgrades** – Tecla `U` (els levels es veuen amb badge verd, i els edificis de Tier 2 porten una franja daurada):
+   - **Miners/Forns**: `cost = (2 × cost base) + 5 circuits avançats`.
+   - **Cintes**: `cost = 1 planxa d’acer + 1 circuit avançat`.
+   - **Edificis Tier 2**: `cost = (2 × cost base) + 10 circuits avançats`.
 
 ## Receptes i edificis
-| Edifici | Tier | Cost | Funció | Entrades | Sortides |
-|---------|------|------|--------|----------|----------|
-| Cinta | 1 | 1× Planxa de ferro | Mou ítems d'una cel·la a l'altra | 1 direcció d'entrada | 1 direcció de sortida |
-| Diposit | 1 | 4× Planxes de ferro | Emmagatzema recursos al teu inventari | Qualsevol direcció | — |
-| Miner de ferro | 1 | 12× Planxes de ferro | Extreu mineral de ferro | — | Mineral de ferro |
-| Miner de coure | 1 | 12× Planxes de ferro | Extreu mineral de coure | — | Mineral de coure |
-| Forn de ferro | 1 | 10× Planxes de ferro | Converteix mineral de ferro en planxes | 2× Mineral de ferro | 1× Planxa de ferro (per cinta) |
-| Forn de coure | 1 | 10× Planxes de ferro | Converteix mineral de coure en planxes | 2× Mineral de coure | 1× Planxa de coure (per cinta) |
-| Filadora | 1 | 10× Planxes de ferro, 6× Planxes de coure | Produeix fil de coure | 1× Planxa de coure | 2× Fil de coure (per cinta) |
-| Premsa d'engranatges | 1 | 14× Planxes de ferro | Fa engranatges | 2× Planxes de ferro | 1× Engranatge (per cinta) |
-| Assembler de circuits | 1 | 18× Planxes de ferro, 6× Fil de coure | Fa circuits | 2× Fil de coure, 1× Planxa de ferro | 1× Circuit (inventari) |
-| Miner de carbó | 2 | 18× Planxes de ferro, 4× Circuit | Extreu carbó | Veta de carbó | Carbó |
-| Farga d'acer | 2 | 20× Planxes de ferro, 5× Carbó | Fusiona ferro + carbó | 1× Planxa de ferro, 1× Carbó | 1× Planxa d'acer (per cinta) |
-| Assembler avançat | 2 | 10× Planxa d'acer, 5× Circuit | Fa circuits avançats | 1× Planxa d'acer, 1× Circuit | 1× Circuit avançat (inventari) |
+| Edifici | Tier | Cost base | Entrades | Sortides |
+|---------|------|-----------|----------|----------|
+| Cinta | 1 | 1× planxa ferro | 1 direcció | 1 direcció |
+| Dipòsit | 1 | 4× planxes ferro | Qualsevol | Inventari / sortida configurada |
+| Miner ferro/coure | 1 | 12× planxes ferro | — | Mineral corresponent |
+| Forn ferro/coure | 1 | 10× planxes ferro | 2× mineral | 1× planxa (cinta) |
+| Filadora | 1 | 10× planxes ferro, 6× planxes coure | 1× planxa coure | 2× fil coure |
+| Premsa engranatges | 1 | 14× planxes ferro | 2× planxes ferro | 1 engranatge |
+| Assembler circuits | 1 | 18× planxes ferro, 6× fil coure | 2× fil, 1× planxa ferro | 1 circuit (inventari) |
+| Miner carbó | 2 | 18× planxes ferro, 4× circuits | Veta carbó | Carbó |
+| Farga d’acer | 2 | 20× planxes ferro, 5× carbó | 1 planxa ferro + 1 carbó | 1 planxa acer |
+| Assembler avançat | 2 | 10× planxa acer, 5× circuits | 1 planxa acer + 1 circuit | 1 circuit avançat (inventari) |
 
-> Consulta el panell de Receptes per a detalls visualment més compactes.
+Consulta `public/src/data/recipes.js` per afegir-ne de nous.
 
 ## Persistència
-- **Autoguardat**: cada 30 segons (configurable a `PersistenceSystem`) serialitza inventari, entitats, vetes i el seed a `localStorage`.
-- **Botons**:
-  - `Guardar`: força un guardat immediat.
-  - `Reset`: buida el `localStorage` i reinicia el món amb noves vetes.
+- Autoguardat cada 30 s (`PersistenceSystem`).
+- Botons al panell de debug: *Guardar* i *Reset* (reinicia vetes i progressió).
+- S’emmagatzema: inventari, entitats (amb nivell, tier, configuració), vetes i estat de milestones.
 
 ## Estructura del projecte
 ```
 public/
-├─ index.html            ← HTML principal + HUD
+├─ index.html
 ├─ styles/
-│  └─ main.css          ← Estils del joc i HUD
-└─ src/
-   ├─ main.js           ← Punt d’entrada
-   ├─ core/             ← Engine, WorldState, Storage
-   ├─ systems/          ← Input, Build, Conveyor, Resource, Persistence
-   ├─ entities/         ← BaseEntity, Cinta, Miner, etc.
-   ├─ ui/               ← Panells HUD (Recursos, Construcció, Receptes, etc.)
-   └─ data/             ← Buildables, Receptes, vetes
+│  └─ main.css
+├─ src/
+│  ├─ main.js
+│  ├─ core/        # Engine, State, Storage
+│  ├─ systems/     # Input, Build, Conveyor, Resource, Progression, Depot, Upgrade, etc.
+│  ├─ entities/    # BaseEntity, miners, forns, cintes…
+│  ├─ ui/          # Panells HUD (recursos, receptes, upgrades…)
+│  └─ data/        # buildables, receptes, camp de recursos
+└─ assets (imatges, sprites)
 ```
 
 ## Roadmap suggerit
-- Afegir més tipus de recursos/receptes (acer, oli, circuits avançats).
-- Implementar upgrades (cintes més ràpides, miners de nivell 2).
-- Guardar múltiples partides i exportar/importar en fitxers JSON.
-- Afegir objectius o milestones per guiar el jugador.
-
+- Tier 3 (oli, plàstic, circuits avançats extra).
+- Sistema de missions/objectius i exportació de guardats.
+- Més upgrades (cintes ràpides LV3, beacons, logística avançada).
+- Versions mòbil/tablet amb UI específica.
