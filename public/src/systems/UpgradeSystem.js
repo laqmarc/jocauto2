@@ -56,7 +56,8 @@ export class UpgradeSystem {
     }
 
     if (!this.state.canAfford(plan.cost)) {
-      this.notify(false, 'Recursos insuficients per millorar');
+      const missing = this.listMissing(plan.cost);
+      this.notify(false, `Recursos insuficients per millorar (${missing})`);
       return;
     }
 
@@ -122,6 +123,20 @@ export class UpgradeSystem {
       reason: success ? null : message,
       message: success ? message : null,
     });
+  }
+
+  listMissing(cost = {}) {
+    const entries = Object.entries(cost)
+      .map(([resource, amount]) => {
+        const have = this.state.inventory[resource] || 0;
+        const need = Math.max(0, amount - have);
+        if (need <= 0) {
+          return null;
+        }
+        return `${need}× ${resource}`;
+      })
+      .filter(Boolean);
+    return entries.length ? entries.join(', ') : '';
   }
 }
 
