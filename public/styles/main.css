@@ -414,10 +414,26 @@ section#recipe-panel,
   text-align: right;
 }
 
+#status-panel{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  max-width: 300px;
+  width: 100%;
+  background: #ddd;
+}
+
+.status-title {
+  margin: 0;
+  font-weight: 600;
+  color: #000;
+}
+
 .status-message {
   margin: 0;
   font-weight: 600;
   min-height: 1.5rem;
+  color: #000;
 }
 
 .status-message.is-error {
@@ -425,7 +441,7 @@ section#recipe-panel,
 }
 
 .status-message.is-success {
-  color: #8eed9d;
+  color: #000;
 }
 
 .status-message.is-remove {

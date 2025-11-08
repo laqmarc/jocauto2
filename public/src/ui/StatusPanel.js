@@ -1,8 +1,9 @@
 export class StatusPanel {
   constructor(container) {
     this.container = container;
-    this.title = document.createElement('h2');
-    this.title.textContent = 'Estat';
+    this.title = document.createElement('p');
+    this.title.textContent = 'ESTAT';
+    this.title.className = 'status-title';
     this.message = document.createElement('p');
     this.message.className = 'status-message';
     this.timestamp = document.createElement('span');
