@@ -57,13 +57,18 @@ export class InputSystem {
   }
 
   onKeyDown(event) {
-    if (event.key.toLowerCase() === 'r') {
+    const key = event.key.toLowerCase();
+    if (key === 'r') {
       this.state.emit('input:rotate');
-    } else if (event.key.toLowerCase() === 'f') {
+    } else if (key === 'f') {
       this.state.emit('input:cycle-conveyor');
-    } else if (event.key.toLowerCase() === 'q') {
+    } else if (key === 'q') {
       if (this.state.hoverTile) {
         this.state.emit('input:cycle-depot', { tile: this.state.hoverTile });
+      }
+    } else if (key === 'i') {
+      if (this.state.hoverTile) {
+        this.state.emit('input:inspect', { tile: this.state.hoverTile });
       }
     }
   }

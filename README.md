@@ -34,6 +34,7 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
 - `R`: rota la sortida de l’edifici seleccionat (Nord → Est → Sud → Oest).
 - `F`: (només cintes) canvia la direcció d'entrada preferida; les cintes accepten automàticament entrades frontal i laterals, però amb `F` pots forçar quin port es destaca.
 - `Q`: mentre apuntes a un `Dipòsit`, cicla quin recurs de l’inventari vols que expulsi per la sortida (cal que hi hagi stock).
+- `I`: inspecciona la casella sota el cursor i mostra un resum (veta, entitat, configuració) al panell d’estat.
 
 ### HUD (panell dret)
 1. **Recursos**: inventari actual i llegenda de vetes/productes.

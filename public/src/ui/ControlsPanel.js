@@ -16,6 +16,7 @@ export class ControlsPanel {
     this.addEntry('R', 'Rotar orientació');
     this.addEntry('F', 'Canviar entrada de cinta');
     this.addEntry('Q', 'Seleccionar recurs del dipòsit');
+    this.addEntry('I', 'Inspeccionar casella');
   }
 
   addEntry(key, description) {

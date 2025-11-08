@@ -15,25 +15,42 @@ body {
 
 #app {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
   flex-direction: column;
   justify-content: flex-start;
+  margin: auto;
+  max-width: 1900px;
+  gap: 20px;
+  padding: 30px 15px 100px;
 }
 
 .top {
   display: flex;
   flex-direction: row;
+  gap: 15px;
+  width: 100%;
+}
+
+.leftview {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  gap: 1rem;
 }
 
 #canvas-wrapper {
   position: relative;
-  flex: 0 0 auto;
-  align-self: flex-start;
+  flex: 1 1 auto;
+  align-self: stretch;
+  max-width: 1280px;
+  width: 100%;
 }
 
 #game-canvas {
   display: block;
+  width: 100%;
+  height: auto;
   background: #1b2f3a;
 }
 
@@ -69,6 +86,10 @@ body {
   overflow-y: auto;
 }
 
+.bottom {
+  width: 100%;
+}
+
 .controls-list {
   list-style: none;
   padding: 0;
@@ -97,15 +118,35 @@ body {
   min-height: auto;
 }
 
-#recipe-panel {
-  /* max-height: 220px;
-  overflow-y: auto; */
+#recipe-panel.collapsible-panel {
+  max-height: none;
+}
+
+#recipe-panel .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#recipe-panel .panel-toggle {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #2c4854;
+  background: #13232c;
+  color: inherit;
+  cursor: pointer;
+}
+
+#recipe-panel.collapsible-panel.is-collapsed .recipe-content {
+  display: none;
 }
 
 .recipe-list {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .recipe-item {
@@ -119,7 +160,7 @@ body {
   font-size: 0.95rem;
 }
 
-.recipe-body {
+.recipe-item-body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -147,6 +188,78 @@ body {
 .recipe-arrow {
   font-size: 1.2rem;
   color: #9bd3ff;
+}
+
+@media (max-width: 1400px) {
+  #hud,
+  .leftview {
+    width: 280px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .top {
+    flex-direction: column;
+  }
+
+  .leftview,
+  #hud {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #build-panel,
+  #controls-panel {
+    flex: 1 1 320px;
+  }
+
+  #hud {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #hud section {
+    flex: 1 1 300px;
+  }
+
+  .recipe-list {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  #app {
+    padding: 15px;
+  }
+
+  #hud section {
+    min-height: auto;
+  }
+
+  .controls-list {
+    font-size: 0.8rem;
+  }
+
+  .build-list button {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .bottom {
+    order: 3;
+  }
+
+  #hud {
+    flex-direction: column;
+  }
+
+  #hud section {
+    flex: 1 1 auto;
+  }
 }
 
 .build-list {
