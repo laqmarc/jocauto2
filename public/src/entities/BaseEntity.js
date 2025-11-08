@@ -6,6 +6,8 @@ export class BaseEntity {
     this.position = { x: position.x, y: position.y };
     this.orientation = orientation;
     this.color = color;
+    this.level = 1;
+    this.tier = 1;
   }
 
   draw(ctx, tileSize) {
@@ -14,6 +16,12 @@ export class BaseEntity {
     ctx.fillStyle = this.color;
     ctx.fillRect(px + 4, py + 4, tileSize - 8, tileSize - 8);
     this.drawPorts(ctx, tileSize);
+    if ((this.tier || 1) >= 2) {
+      this.drawTierBadge(ctx, tileSize);
+    }
+    if ((this.level || 1) >= 2) {
+      this.drawLevelBadge(ctx, tileSize);
+    }
   }
 
   drawPorts(ctx, tileSize) {
@@ -63,5 +71,38 @@ export class BaseEntity {
 
   getIOMarkers() {
     return [];
+  }
+
+  drawTierBadge(ctx, tileSize) {
+    const px = this.position.x * tileSize;
+    const py = this.position.y * tileSize;
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 196, 64, 0.5)';
+    ctx.strokeStyle = 'rgba(255, 220, 120, 0.9)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(px + tileSize - 6, py + 6);
+    ctx.lineTo(px + tileSize - 6, py + tileSize - 6);
+    ctx.lineTo(px + 6, py + tileSize - 6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  drawLevelBadge(ctx, tileSize) {
+    const px = this.position.x * tileSize + tileSize - 27;
+    const py = this.position.y * tileSize + 4;
+    ctx.save();
+    ctx.fillStyle = '#0f1c24';
+    ctx.fillRect(px, py, 10, 10);
+    ctx.strokeStyle = '#4ade80';
+    ctx.strokeRect(px, py, 10, 10);
+    ctx.fillStyle = '#4ade80';
+    ctx.font = '8px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('2', px + 5, py + 5);
+    ctx.restore();
   }
 }

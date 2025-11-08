@@ -4,12 +4,14 @@ import { directionVectors, oppositeDirection, rotateDirection } from '../data/bu
 export class Conveyor extends BaseEntity {
   constructor({ position, orientation = 'east', speed = 1, color, inputDirection }) {
     super({ type: 'conveyor', position, orientation, color: color || '#5ac8fa' });
+    this.baseSpeed = speed;
     this.speed = speed;
     this.item = null;
     this.progress = 0;
     this.manualInputDirection = typeof inputDirection === 'string';
     this.inputDirection = inputDirection || oppositeDirection[this.orientation];
     this.lastInputDirection = this.inputDirection;
+    this.applyLevel();
   }
 
   receiveItem(item, fromDirection = null) {
@@ -87,5 +89,9 @@ export class Conveyor extends BaseEntity {
       rotateDirection(this.orientation, 1),
     ].filter(Boolean);
     return [...new Set(dirs)];
+  }
+
+  applyLevel() {
+    this.speed = this.baseSpeed * (this.level >= 2 ? 1.5 : 1);
   }
 }

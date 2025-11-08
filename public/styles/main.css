@@ -166,6 +166,32 @@ body {
   gap: 0.5rem;
 }
 
+#upgrade-panel {
+  margin-top: 1rem;
+}
+
+.upgrade-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.upgrade-list li {
+  border: 1px solid #1e3842;
+  padding: 0.35rem 0.5rem;
+  background: #102028;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.upgrade-name {
+  font-weight: 600;
+}
+
 .recipe-side {
   list-style: none;
   margin: 0;

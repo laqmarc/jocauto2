@@ -8,6 +8,7 @@ import { PersistenceSystem } from './systems/PersistenceSystem.js';
 import { DepotSystem } from './systems/DepotSystem.js';
 import { ProgressionSystem } from './systems/ProgressionSystem.js';
 import { InspectionSystem } from './systems/InspectionSystem.js';
+import { UpgradeSystem } from './systems/UpgradeSystem.js';
 
 const canvas = document.getElementById('game-canvas');
 
@@ -28,5 +29,6 @@ engine.registerSystem(new ResourceSystem(worldState));
 engine.registerSystem(new ProgressionSystem(worldState));
 engine.registerSystem(new DepotSystem(worldState));
 engine.registerSystem(new InspectionSystem(worldState));
+engine.registerSystem(new UpgradeSystem(worldState));
 
 engine.start();

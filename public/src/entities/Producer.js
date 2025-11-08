@@ -3,9 +3,11 @@ import { BaseEntity } from './BaseEntity.js';
 export class Producer extends BaseEntity {
   constructor({ position, orientation = 'east', interval = 2, output, color }) {
     super({ type: 'producer', position, orientation, color: color || '#f7b733' });
+    this.baseInterval = interval;
     this.interval = interval;
     this.output = output;
     this.timer = 0;
+    this.applyLevel();
   }
 
   draw(ctx, tileSize) {
@@ -18,5 +20,10 @@ export class Producer extends BaseEntity {
 
   getIOMarkers() {
     return [{ type: 'output', direction: this.orientation }];
+  }
+
+  applyLevel() {
+    const multiplier = this.level >= 2 ? 0.5 : 1;
+    this.interval = this.baseInterval * multiplier;
   }
 }

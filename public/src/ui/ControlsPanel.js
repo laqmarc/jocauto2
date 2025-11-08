@@ -15,6 +15,7 @@ export class ControlsPanel {
     this.addEntry('Ratolí dret', 'Eliminar edifici');
     this.addEntry('R', 'Rotar orientació');
     this.addEntry('F', 'Canviar entrada de cinta');
+    this.addEntry('U', 'Millorar edifici');
     this.addEntry('Q', 'Seleccionar recurs del dipòsit');
     this.addEntry('I', 'Inspeccionar casella');
   }

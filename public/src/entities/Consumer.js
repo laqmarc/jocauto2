@@ -10,6 +10,8 @@ export class Consumer extends BaseEntity {
     this.progress = 0;
     this.buffer = {};
     this.extraInputOffsets = extraInputOffsets;
+    this.speedMultiplier = 1;
+    this.applyLevel();
   }
 
   receiveItem(item) {
@@ -33,7 +35,7 @@ export class Consumer extends BaseEntity {
       this.progress = 0;
       return;
     }
-    this.progress += dt;
+    this.progress += dt * (this.speedMultiplier || 1);
     if (this.progress >= recipe.duration) {
       this.progress = 0;
       Object.entries(recipe.input).forEach(([resource, amount]) => {
@@ -119,5 +121,9 @@ export class Consumer extends BaseEntity {
       }
     });
     return [...new Set(directions)];
+  }
+
+  applyLevel() {
+    this.speedMultiplier = this.level >= 2 ? 2 : 1;
   }
 }

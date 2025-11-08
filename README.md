@@ -33,6 +33,7 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
 - **Tecles**:
 - `R`: rota la sortida de l’edifici seleccionat (Nord → Est → Sud → Oest).
 - `F`: (només cintes) canvia la direcció d'entrada preferida; les cintes accepten automàticament entrades frontal i laterals, però amb `F` pots forçar quin port es destaca.
+- `U`: millora l’edifici que tens sota el cursor (si la millora està disponible i tens recursos).
 - `Q`: mentre apuntes a un `Dipòsit`, cicla quin recurs de l’inventari vols que expulsi per la sortida (cal que hi hagi stock).
 - `I`: inspecciona la casella sota el cursor i mostra un resum (veta, entitat, configuració) al panell d’estat.
 
@@ -62,6 +63,7 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
    - Es desbloquegen nous edificis (Miner de carbó, Farga d’acer i Assembler avançat).
    - El panell de construcció mostra els edificis de Tier 2 i, si encara no els tens disponibles, indica “Necessita Tier 2”.
 3. **Tier 2**: Pots explotar carbó per combinar-lo amb planxes de ferro i obtenir `Planxa d'acer`, imprescindible per fabricar `Circuit avançat` i, per tant, per progressar cap al següent tier.
+4. **Upgrades**: amb la tecla `U` pots promocionar miners i forns (cost = 2x cost base + 5 circuits avan�ats), cintes (1 planxa d'acer + 1 circuit avan�at) i qualsevol edifici de Tier 2 (2x cost base + 10 circuits avan�ats). Les versions nivell 2 processen m�s r�pid o transporten m�s depressa, i el joc mostra una franja daurada per als edificis de Tier 2 i un distintiu verd "2" quan estan millorats.
 
 ## Tiers
 ![Captura del joc](public/jocauto.png)
@@ -114,3 +116,4 @@ public/
 - Implementar upgrades (cintes més ràpides, miners de nivell 2).
 - Guardar múltiples partides i exportar/importar en fitxers JSON.
 - Afegir objectius o milestones per guiar el jugador.
+

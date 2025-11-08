@@ -5,6 +5,7 @@ import { StatusPanel } from '../ui/StatusPanel.js';
 import { ResourceTooltip } from '../ui/ResourceTooltip.js';
 import { RecipePanel } from '../ui/RecipePanel.js';
 import { ControlsPanel } from '../ui/ControlsPanel.js';
+import { UpgradePanel } from '../ui/UpgradePanel.js';
 import { resourceInfo } from '../data/recipes.js';
 import { randomResourceField } from '../data/resourceField.js';
 
@@ -56,6 +57,7 @@ export class WorldState {
       build: document.getElementById('build-panel'),
       controls: document.getElementById('controls-panel'),
       recipes: document.getElementById('recipe-panel'),
+      upgrades: document.getElementById('upgrade-panel'),
       status: document.getElementById('status-panel'),
       debug: document.getElementById('debug-panel'),
     };
@@ -63,6 +65,7 @@ export class WorldState {
     this.resourcePanel = new ResourcePanel(this.panels.resources);
     this.recipePanel = new RecipePanel(this.panels.recipes);
     this.controlsPanel = new ControlsPanel(this.panels.controls);
+    this.upgradePanel = new UpgradePanel(this.panels.upgrades);
     this.statusPanel = new StatusPanel(this.panels.status);
     this.debugPanel = new DebugPanel(this.panels.debug);
     const tooltipElement = document.getElementById('resource-tooltip');

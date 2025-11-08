@@ -66,6 +66,10 @@ export class InputSystem {
       if (this.state.hoverTile) {
         this.state.emit('input:cycle-depot', { tile: this.state.hoverTile });
       }
+    } else if (key === 'u') {
+      if (this.state.hoverTile) {
+        this.state.emit('input:upgrade', { tile: this.state.hoverTile });
+      }
     } else if (key === 'i') {
       if (this.state.hoverTile) {
         this.state.emit('input:inspect', { tile: this.state.hoverTile });

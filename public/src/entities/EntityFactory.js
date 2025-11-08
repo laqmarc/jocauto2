@@ -50,6 +50,11 @@ export function createEntityFromId(id, tile, orientation, overrides = {}) {
   if (entity.type === 'depot' && overrides.outputResource) {
     entity.outputResource = overrides.outputResource;
   }
+  entity.level = overrides.level || 1;
+  entity.tier = def.requiredTier || 1;
+  if (typeof entity.applyLevel === 'function') {
+    entity.applyLevel();
+  }
   entity.buildId = def.id;
   return entity;
 }
@@ -63,6 +68,8 @@ export function entityToSnapshot(entity) {
     x: entity.position.x,
     y: entity.position.y,
     orientation: entity.orientation,
+    level: entity.level || 1,
+    tier: entity.tier || 1,
   };
   if (entity.type === 'conveyor') {
     snapshot.inputDirection = entity.inputDirection;
