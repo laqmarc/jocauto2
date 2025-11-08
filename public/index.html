@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joc Auto 2D</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <div id="canvas-wrapper">
+      <canvas id="game-canvas" width="1280" height="720"></canvas>
+      <div id="resource-tooltip" class="tooltip hidden"></div>
+    </div>
+
+    <div id="hud">
+      <section id="resource-panel"></section>
+      <section id="build-panel"></section>
+      <section id="recipe-panel"></section>
+      <section id="status-panel"></section>
+      <section id="debug-panel"></section>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

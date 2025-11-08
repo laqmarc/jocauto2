@@ -1,0 +1,267 @@
+* {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: #0f1c24;
+  color: #f4f7f9;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+#canvas-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
+
+#game-canvas {
+  display: block;
+  background: #1b2f3a;
+}
+
+#hud {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  width: 320px;
+  background: rgba(8, 14, 17, 0.9);
+}
+
+#hud section {
+  border: 1px solid #203945;
+  padding: 0.75rem;
+  min-height: 80px;
+}
+
+#hud section h3 {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a8c2d0;
+}
+
+#build-panel {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#status-panel {
+  min-height: auto;
+}
+
+#recipe-panel {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.recipe-item {
+  padding: 0.5rem;
+  border: 1px solid #1e3842;
+  background: #0f1c1f;
+}
+
+.recipe-item h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.recipe-body {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recipe-side {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 120px;
+  font-size: 0.85rem;
+}
+
+.recipe-side li {
+  margin-bottom: 0.2rem;
+}
+
+.recipe-side-title {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: #8ca0ad;
+}
+
+.recipe-arrow {
+  font-size: 1.2rem;
+  color: #9bd3ff;
+}
+
+.build-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.build-list button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #22404d;
+  background: #13232c;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.build-list button:hover {
+  background: #1c3541;
+}
+
+.build-list button.is-active {
+  background: #2f576a;
+  border-color: #51a5d6;
+}
+
+.build-name {
+  font-weight: 600;
+}
+
+.build-cost {
+  font-size: 0.8rem;
+  color: #a7c4d5;
+}
+
+.resource-legend {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 0.75rem;
+}
+
+.resource-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.resource-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.orientation-label {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #9dc1d3;
+}
+
+.resource-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+}
+
+.resource-list dt {
+  font-weight: 600;
+}
+
+.resource-list dd {
+  margin: 0;
+  text-align: right;
+}
+
+.status-message {
+  margin: 0;
+  font-weight: 600;
+  min-height: 1.5rem;
+}
+
+.status-message.is-error {
+  color: #ff9a8f;
+}
+
+.status-message.is-success {
+  color: #8eed9d;
+}
+
+.status-message.is-remove {
+  color: #9ddcff;
+}
+
+.status-time {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: #8ca0ad;
+}
+
+.debug-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: "Fira Mono", "Consolas", monospace;
+  font-size: 0.85rem;
+}
+
+.debug-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.debug-actions button {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #2f4a52;
+  background: #122028;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.debug-actions button:hover {
+  background: #1f3641;
+}
+
+#resource-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10, 16, 22, 0.9);
+  color: #f4f7f9;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #1f3a46;
+  font-size: 0.8rem;
+  transform: translate(12px, 12px);
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+#resource-tooltip.hidden {
+  opacity: 0;
+}

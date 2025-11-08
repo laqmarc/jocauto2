@@ -1,0 +1,161 @@
+import { buildableList, buildables, directionOrder, directionLabels } from '../data/buildables.js';
+import { BuildMenu } from '../ui/BuildMenu.js';
+import { createEntityFromId } from '../entities/EntityFactory.js';
+import { resourceInfo } from '../data/recipes.js';
+
+export class BuildSystem {
+  constructor(state) {
+    this.state = state;
+    this.activeBuildId = buildableList[0]?.id ?? null;
+    this.orientationIndex = 1;
+    this.lastStatus = null;
+  }
+
+  init() {
+    this.menu = new BuildMenu(this.state.panels.build, buildableList, {
+      onSelect: (id) => this.setActiveBuild(id),
+      getActive: () => this.activeBuildId,
+    });
+
+    this.handlePlace = (payload) => this.placeAt(payload.tile);
+    this.handleRemove = (payload) => this.removeAt(payload.tile);
+
+    this.state.on('input:place', this.handlePlace);
+    this.state.on('input:remove', this.handleRemove);
+    this.state.on('input:rotate', () => this.rotate());
+    this.updateOrientationLabel();
+  }
+
+  update() {
+    this.updatePlacementPreview();
+  }
+
+  updatePlacementPreview() {
+    const tile = this.state.hoverTile;
+    const def = buildables[this.activeBuildId];
+    if (!tile || !def) {
+      this.state.clearPlacementPreview();
+      return;
+    }
+    const orientation = directionOrder[this.orientationIndex];
+    const preview = this.evaluatePlacement(tile, def, orientation);
+    this.state.setPlacementPreview(preview);
+  }
+
+  setActiveBuild(id) {
+    this.activeBuildId = id;
+    this.menu.highlightActive();
+  }
+
+  rotate() {
+    this.orientationIndex = (this.orientationIndex + 1) % directionOrder.length;
+    this.updateOrientationLabel();
+  }
+
+  updateOrientationLabel() {
+    const orientation = directionOrder[this.orientationIndex];
+    this.menu.setOrientationLabel(directionLabels[orientation] || orientation);
+  }
+
+  placeAt(tile) {
+    if (!this.activeBuildId) {
+      return;
+    }
+    const def = buildables[this.activeBuildId];
+    if (!def) {
+      return;
+    }
+    const orientation = directionOrder[this.orientationIndex];
+    const evaluation = this.evaluatePlacement(tile, def, orientation);
+    this.state.setPlacementPreview(evaluation);
+    if (!evaluation.valid) {
+      this.lastStatus = evaluation;
+      this.state.emit('build:feedback', evaluation);
+      return;
+    }
+    const entity = createEntityFromId(def.id, tile, orientation);
+    if (!entity) {
+      return;
+    }
+
+    if (!this.state.addEntity(entity)) {
+      return;
+    }
+
+    if (!this.state.spend(def.cost)) {
+      this.state.removeEntity(entity);
+      return;
+    }
+
+    this.lastStatus = {
+      tile,
+      def,
+      valid: true,
+      reason: null,
+      cost: def.cost,
+      orientation,
+    };
+    this.state.emit('build:feedback', this.lastStatus);
+  }
+
+  removeAt(tile) {
+    const entity = this.state.removeEntityAt(tile);
+    if (!entity) {
+      this.state.emit('build:feedback', {
+        tile,
+        def: null,
+        valid: false,
+        reason: 'No hi ha cap estructura',
+        action: 'remove',
+      });
+      return;
+    }
+    const def = buildables[entity.buildId];
+    this.state.emit('build:feedback', {
+      tile,
+      def,
+      valid: true,
+      action: 'remove',
+      message: `${def?.label || 'Estructura'} eliminada`,
+    });
+  }
+
+  evaluatePlacement(tile, def, orientation) {
+    if (!tile || !def) {
+      return null;
+    }
+    const result = {
+      tile,
+      def,
+      orientation,
+      cost: def.cost,
+      valid: true,
+      reason: null,
+    };
+    if (!this.state.grid.inBounds(tile.x, tile.y)) {
+      result.valid = false;
+      result.reason = 'Fora del mapa';
+      return result;
+    }
+    if (this.state.grid.get(tile.x, tile.y)) {
+      result.valid = false;
+      result.reason = 'Casella ocupada';
+      return result;
+    }
+    if (def.requiresResource) {
+      const resource = this.state.getResourceAt(tile);
+      if (resource !== def.requiresResource) {
+        result.valid = false;
+        const label = resourceInfo[def.requiresResource]?.label || def.requiresResource;
+        result.reason = `Necessita veta de ${label}`;
+        return result;
+      }
+    }
+    if (!this.state.canAfford(def.cost)) {
+      result.valid = false;
+      result.reason = 'Recursos insuficients';
+      return result;
+    }
+    return result;
+  }
+}

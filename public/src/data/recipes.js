@@ -1,0 +1,65 @@
+export const resourceInfo = {
+  iron_ore: {
+    label: 'Mineral de ferro',
+    color: '#c26d2c',
+    isField: true,
+  },
+  iron_plate: {
+    label: 'Planxa de ferro',
+    color: '#f2f2f2',
+  },
+  copper_ore: {
+    label: 'Mineral de coure',
+    color: '#c2843b',
+    isField: true,
+  },
+  copper_plate: {
+    label: 'Planxa de coure',
+    color: '#ffbb71',
+  },
+  copper_wire: {
+    label: 'Fil de coure',
+    color: '#ffa260',
+  },
+  iron_gear: {
+    label: 'Engranatge',
+    color: '#d9e0eb',
+  },
+  circuit_board: {
+    label: 'Circuit',
+    color: '#8ff0c8',
+  },
+};
+
+export const recipes = {
+  iron_plate: {
+    input: { iron_ore: 2 },
+    output: { iron_plate: 1 },
+    duration: 3,
+    outputMode: 'belt',
+  },
+  copper_plate: {
+    input: { copper_ore: 2 },
+    output: { copper_plate: 1 },
+    duration: 3,
+    outputMode: 'belt',
+  },
+  copper_wire: {
+    input: { copper_plate: 1 },
+    output: { copper_wire: 2 },
+    duration: 2.5,
+    outputMode: 'belt',
+  },
+  iron_gear: {
+    input: { iron_plate: 2 },
+    output: { iron_gear: 1 },
+    duration: 2.5,
+    outputMode: 'belt',
+  },
+  circuit_board: {
+    input: { copper_wire: 2, iron_plate: 1 },
+    output: { circuit_board: 1 },
+    duration: 5,
+    outputMode: 'inventory',
+  },
+};
