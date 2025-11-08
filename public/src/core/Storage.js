@@ -46,6 +46,7 @@ export class Storage {
           snapshot.id,
           { x: snapshot.x, y: snapshot.y },
           snapshot.orientation,
+          snapshot,
         );
         if (entity) {
           state.addEntity(entity);

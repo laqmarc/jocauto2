@@ -14,6 +14,15 @@ export const oppositeDirection = {
   west: 'east',
 };
 
+export function rotateDirection(baseDirection, offset = 0) {
+  const index = directionOrder.indexOf(baseDirection);
+  if (index === -1) {
+    return baseDirection;
+  }
+  const normalized = (index + offset + directionOrder.length * 10) % directionOrder.length;
+  return directionOrder[normalized];
+}
+
 export const directionLabels = {
   north: 'Nord',
   east: 'Est',
@@ -96,6 +105,7 @@ export const buildableList = [
     recipe: 'circuit_board',
     color: '#52d8b2',
     cost: { iron_plate: 18, copper_wire: 6 },
+    extraInputOffsets: [1, -1],
   },
 ];
 

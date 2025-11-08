@@ -1,14 +1,15 @@
 import { BaseEntity } from './BaseEntity.js';
 import { recipes, resourceInfo } from '../data/recipes.js';
-import { directionVectors, oppositeDirection } from '../data/buildables.js';
+import { directionVectors, oppositeDirection, rotateDirection } from '../data/buildables.js';
 import { Item } from './Item.js';
 
 export class Consumer extends BaseEntity {
-  constructor({ position, orientation = 'east', recipeId, color }) {
+  constructor({ position, orientation = 'east', recipeId, color, extraInputOffsets = [] }) {
     super({ type: 'consumer', position, orientation, color: color || '#ff6f61' });
     this.recipeId = recipeId;
     this.progress = 0;
     this.buffer = {};
+    this.extraInputOffsets = extraInputOffsets;
   }
 
   receiveItem(item) {
@@ -83,9 +84,14 @@ export class Consumer extends BaseEntity {
     };
     const target = state.grid.get(targetPos.x, targetPos.y);
     const info = resourceInfo[resource] || {};
+    const incomingDirection = oppositeDirection[this.orientation];
     for (let i = 0; i < amount; i += 1) {
       const item = new Item(resource, info.color);
-      if (!target || typeof target.receiveItem !== 'function' || !target.receiveItem(item)) {
+      if (
+        !target ||
+        typeof target.receiveItem !== 'function' ||
+        !target.receiveItem(item, incomingDirection)
+      ) {
         state.addResource(resource, amount - i);
         break;
       }
@@ -93,12 +99,25 @@ export class Consumer extends BaseEntity {
   }
 
   getIOMarkers() {
-    const markers = [];
-    markers.push({ type: 'input', direction: oppositeDirection[this.orientation] });
+    const markers = this.getInputDirections().map((direction) => ({
+      type: 'input',
+      direction,
+    }));
     const recipe = recipes[this.recipeId];
     if (recipe?.outputMode === 'belt') {
       markers.push({ type: 'output', direction: this.orientation });
     }
     return markers;
+  }
+
+  getInputDirections() {
+    const directions = [oppositeDirection[this.orientation]];
+    (this.extraInputOffsets || []).forEach((offset) => {
+      const dir = rotateDirection(this.orientation, offset);
+      if (dir) {
+        directions.push(dir);
+      }
+    });
+    return [...new Set(directions)];
   }
 }

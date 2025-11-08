@@ -1,4 +1,4 @@
-import { directionVectors } from '../data/buildables.js';
+import { directionVectors, oppositeDirection } from '../data/buildables.js';
 
 export class ConveyorSystem {
   constructor(state) {
@@ -29,7 +29,7 @@ export class ConveyorSystem {
     };
     const next = this.state.grid.get(nextPos.x, nextPos.y);
     if (next && typeof next.receiveItem === 'function') {
-      const success = next.receiveItem(conveyor.item);
+      const success = next.receiveItem(conveyor.item, oppositeDirection[conveyor.orientation]);
       if (success) {
         conveyor.clearItem();
         return;

@@ -5,12 +5,13 @@ import { Consumer } from './Consumer.js';
 import { Depot } from './Depot.js';
 
 const constructors = {
-  conveyor: (def, tile, orientation) =>
+  conveyor: (def, tile, orientation, overrides = {}) =>
     new Conveyor({
       position: tile,
       orientation,
       speed: def.speed,
       color: def.color,
+      inputDirection: overrides.inputDirection,
     }),
   producer: (def, tile, orientation) =>
     new Producer({
@@ -26,6 +27,7 @@ const constructors = {
       orientation,
       recipeId: def.recipe,
       color: def.color,
+      extraInputOffsets: def.extraInputOffsets || [],
     }),
   depot: (def, tile, orientation) =>
     new Depot({
@@ -35,7 +37,7 @@ const constructors = {
     }),
 };
 
-export function createEntityFromId(id, tile, orientation) {
+export function createEntityFromId(id, tile, orientation, overrides = {}) {
   const def = buildables[id];
   if (!def) {
     return null;
@@ -44,7 +46,7 @@ export function createEntityFromId(id, tile, orientation) {
   if (!ctor) {
     return null;
   }
-  const entity = ctor(def, tile, orientation);
+  const entity = ctor(def, tile, orientation, overrides);
   entity.buildId = def.id;
   return entity;
 }
@@ -53,10 +55,14 @@ export function entityToSnapshot(entity) {
   if (!entity?.buildId) {
     return null;
   }
-  return {
+  const snapshot = {
     id: entity.buildId,
     x: entity.position.x,
     y: entity.position.y,
     orientation: entity.orientation,
   };
+  if (entity.type === 'conveyor') {
+    snapshot.inputDirection = entity.inputDirection;
+  }
+  return snapshot;
 }

@@ -1,4 +1,10 @@
-import { buildableList, buildables, directionOrder, directionLabels } from '../data/buildables.js';
+import {
+  buildableList,
+  buildables,
+  directionOrder,
+  directionLabels,
+  rotateDirection,
+} from '../data/buildables.js';
 import { BuildMenu } from '../ui/BuildMenu.js';
 import { createEntityFromId } from '../entities/EntityFactory.js';
 import { resourceInfo } from '../data/recipes.js';
@@ -9,6 +15,8 @@ export class BuildSystem {
     this.activeBuildId = buildableList[0]?.id ?? null;
     this.orientationIndex = 1;
     this.lastStatus = null;
+    this.conveyorInputOffsets = [2, -1, 1]; // recte, esquerra, dreta
+    this.conveyorInputIndex = 0;
   }
 
   init() {
@@ -23,6 +31,7 @@ export class BuildSystem {
     this.state.on('input:place', this.handlePlace);
     this.state.on('input:remove', this.handleRemove);
     this.state.on('input:rotate', () => this.rotate());
+    this.state.on('input:cycle-conveyor', () => this.cycleConveyorInput());
     this.updateOrientationLabel();
   }
 
@@ -52,9 +61,22 @@ export class BuildSystem {
     this.updateOrientationLabel();
   }
 
+  cycleConveyorInput() {
+    if (this.activeBuildId !== 'conveyor') {
+      return;
+    }
+    this.conveyorInputIndex = (this.conveyorInputIndex + 1) % this.conveyorInputOffsets.length;
+    this.updateOrientationLabel();
+  }
+
   updateOrientationLabel() {
     const orientation = directionOrder[this.orientationIndex];
-    this.menu.setOrientationLabel(directionLabels[orientation] || orientation);
+    let text = directionLabels[orientation] || orientation;
+    if (this.activeBuildId === 'conveyor') {
+      const inputDir = this.getConveyorInputDirection(orientation);
+      text += ` · Entrada: ${directionLabels[inputDir] || inputDir}`;
+    }
+    this.menu.setOrientationLabel(text);
   }
 
   placeAt(tile) {
@@ -66,14 +88,18 @@ export class BuildSystem {
       return;
     }
     const orientation = directionOrder[this.orientationIndex];
-    const evaluation = this.evaluatePlacement(tile, def, orientation);
+    const overrides = {};
+    if (def.type === 'conveyor') {
+      overrides.inputDirection = this.getConveyorInputDirection(orientation);
+    }
+    const evaluation = this.evaluatePlacement(tile, def, orientation, overrides);
     this.state.setPlacementPreview(evaluation);
     if (!evaluation.valid) {
       this.lastStatus = evaluation;
       this.state.emit('build:feedback', evaluation);
       return;
     }
-    const entity = createEntityFromId(def.id, tile, orientation);
+    const entity = createEntityFromId(def.id, tile, orientation, overrides);
     if (!entity) {
       return;
     }
@@ -94,6 +120,7 @@ export class BuildSystem {
       reason: null,
       cost: def.cost,
       orientation,
+      overrides,
     };
     this.state.emit('build:feedback', this.lastStatus);
   }
@@ -120,7 +147,7 @@ export class BuildSystem {
     });
   }
 
-  evaluatePlacement(tile, def, orientation) {
+  evaluatePlacement(tile, def, orientation, overrides = {}) {
     if (!tile || !def) {
       return null;
     }
@@ -156,6 +183,14 @@ export class BuildSystem {
       result.reason = 'Recursos insuficients';
       return result;
     }
+    if (def.type === 'conveyor' && overrides.inputDirection) {
+      result.inputDirection = overrides.inputDirection;
+    }
     return result;
+  }
+
+  getConveyorInputDirection(orientation) {
+    const offset = this.conveyorInputOffsets[this.conveyorInputIndex] ?? 2;
+    return rotateDirection(orientation, offset);
   }
 }

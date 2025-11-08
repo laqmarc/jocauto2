@@ -37,12 +37,12 @@ export class BaseEntity {
     const size = 6;
 
     ctx.save();
-    if (type === 'input') {
-      ctx.fillStyle = 'rgba(248, 181, 129, 0.9)';
+    if (type === 'input' || type === 'input-secondary') {
+      ctx.fillStyle = type === 'input' ? 'rgba(248, 181, 129, 0.9)' : 'rgba(248, 181, 129, 0.45)';
       ctx.beginPath();
       ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(209, 116, 50, 0.9)';
+      ctx.strokeStyle = type === 'input' ? 'rgba(209, 116, 50, 0.9)' : 'rgba(209, 116, 50, 0.45)';
       ctx.stroke();
     } else {
       ctx.translate(centerX, centerY);

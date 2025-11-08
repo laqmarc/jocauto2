@@ -1,20 +1,33 @@
 import { BaseEntity } from './BaseEntity.js';
-import { directionVectors, oppositeDirection } from '../data/buildables.js';
+import { directionVectors, oppositeDirection, rotateDirection } from '../data/buildables.js';
 
 export class Conveyor extends BaseEntity {
-  constructor({ position, orientation = 'east', speed = 1, color }) {
+  constructor({ position, orientation = 'east', speed = 1, color, inputDirection }) {
     super({ type: 'conveyor', position, orientation, color: color || '#5ac8fa' });
     this.speed = speed;
     this.item = null;
     this.progress = 0;
+    this.manualInputDirection = typeof inputDirection === 'string';
+    this.inputDirection = inputDirection || oppositeDirection[this.orientation];
+    this.lastInputDirection = this.inputDirection;
   }
 
-  receiveItem(item) {
+  receiveItem(item, fromDirection = null) {
     if (this.item) {
       return false;
     }
+    if (fromDirection) {
+      const allowed = this.getAllowedInputDirections();
+      if (!allowed.includes(fromDirection)) {
+        return false;
+      }
+      if (!this.manualInputDirection && fromDirection !== this.inputDirection) {
+        this.inputDirection = fromDirection;
+      }
+    }
     this.item = item;
     this.progress = 0;
+    this.lastInputDirection = fromDirection || this.inputDirection;
     return true;
   }
 
@@ -57,9 +70,22 @@ export class Conveyor extends BaseEntity {
   }
 
   getIOMarkers() {
-    return [
-      { type: 'input', direction: oppositeDirection[this.orientation] },
-      { type: 'output', direction: this.orientation },
-    ];
+    const markers = [];
+    const primary = this.inputDirection || oppositeDirection[this.orientation];
+    markers.push({ type: 'input', direction: primary });
+    this.getAllowedInputDirections()
+      .filter((dir) => dir !== primary)
+      .forEach((dir) => markers.push({ type: 'input-secondary', direction: dir }));
+    markers.push({ type: 'output', direction: this.orientation });
+    return markers;
+  }
+
+  getAllowedInputDirections() {
+    const dirs = [
+      oppositeDirection[this.orientation],
+      rotateDirection(this.orientation, -1),
+      rotateDirection(this.orientation, 1),
+    ].filter(Boolean);
+    return [...new Set(dirs)];
   }
 }

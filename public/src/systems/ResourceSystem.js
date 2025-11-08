@@ -1,6 +1,6 @@
 import { Item } from '../entities/Item.js';
 import { resourceInfo } from '../data/recipes.js';
-import { directionVectors } from '../data/buildables.js';
+import { directionVectors, oppositeDirection } from '../data/buildables.js';
 
 export class ResourceSystem {
   constructor(state) {
@@ -35,7 +35,7 @@ export class ResourceSystem {
     };
     const recipient = this.state.grid.get(nextPos.x, nextPos.y);
     if (recipient && typeof recipient.receiveItem === 'function') {
-      if (recipient.receiveItem(item)) {
+      if (recipient.receiveItem(item, oppositeDirection[producer.orientation])) {
         return;
       }
     }

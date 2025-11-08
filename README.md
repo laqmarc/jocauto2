@@ -1,5 +1,7 @@
 # Joc Auto 2D (HTML/JS)
 
+![Captura del joc](public/jocauto.png)
+
 Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i JavaScript modular. Permet extraure recursos de vetes, transportar-los amb cintes i processar-los en màquines per obtenir productes més avançats.
 
 ## Taula de continguts
@@ -30,7 +32,8 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
   - Clic esquerre: col·loca l’edifici seleccionat (si el fantasma és verd).
   - Clic dret: elimina l’estructura de la cel·la (el panell d’estat confirma l’acció o avisa si no hi havia res).
 - **Tecles**:
-  - `R`: rota l’edifici seleccionat (Nord → Est → Sud → Oest).
+- `R`: rota la sortida de l’edifici seleccionat (Nord → Est → Sud → Oest).
+- `F`: (només cintes) canvia la direcció d'entrada preferida; les cintes accepten automàticament entrades frontal i laterals, però amb `F` pots forçar quin port es destaca.
 
 ### HUD (panell dret)
 1. **Recursos**: inventari actual i llegenda de vetes/productes.
@@ -46,8 +49,8 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
 4. **Processa**:
    - `Forn de ferro`/`Forn de coure` produeixen mineral a planxes.
    - `Filadora` converteix planxes de coure en fil.
-   - `Premsa d’engranatges` usa planxes de ferro per produir engranatges.
-   - `Assembler de circuits` consumeix fil de coure + planxes de ferro per fer circuits (diposita directament a inventari).
+   - `Premsa d'engranatges` usa planxes de ferro per produir engranatges.
+   - `Assembler de circuits` consumeix fil de coure + planxes de ferro (recorda connectar-li dues cintes: una al port oest i l'altra a qualsevol dels ports lateral) i diposita els circuits directament a l'inventari.
 5. **Recull**: connecta la sortida de cada màquina a una cinta i finalitza-la en un `Diposit` o en una altra màquina. Els dipòsits accepten recursos pels quatre costats i els retornen a l’inventari.
 6. **Gestiona recursos**: vigila el panell de recursos per assegurar-te que pots pagar el cost de nous edificis (els botons indiquen el cost exacte).
 

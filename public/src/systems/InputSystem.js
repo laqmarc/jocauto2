@@ -59,6 +59,8 @@ export class InputSystem {
   onKeyDown(event) {
     if (event.key.toLowerCase() === 'r') {
       this.state.emit('input:rotate');
+    } else if (event.key.toLowerCase() === 'f') {
+      this.state.emit('input:cycle-conveyor');
     }
   }
 }

@@ -15,9 +15,15 @@ body {
 
 #app {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   min-height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
 }
 
 #canvas-wrapper {
@@ -63,13 +69,13 @@ body {
 }
 
 #recipe-panel {
-  max-height: 220px;
-  overflow-y: auto;
+  /* max-height: 220px;
+  overflow-y: auto; */
 }
 
 .recipe-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.75rem;
 }
 
