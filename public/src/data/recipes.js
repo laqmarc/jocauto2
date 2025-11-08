@@ -29,6 +29,19 @@ export const resourceInfo = {
     label: 'Circuit',
     color: '#8ff0c8',
   },
+  coal: {
+    label: 'Carbó',
+    color: '#3c3c3c',
+    isField: true,
+  },
+  steel_plate: {
+    label: 'Planxa d\'acer',
+    color: '#bcc7d3',
+  },
+  advanced_circuit: {
+    label: 'Circuit avançat',
+    color: '#c084fc',
+  },
 };
 
 export const recipes = {
@@ -60,6 +73,18 @@ export const recipes = {
     input: { copper_wire: 2, iron_plate: 1 },
     output: { circuit_board: 1 },
     duration: 5,
+    outputMode: 'inventory',
+  },
+  steel_plate: {
+    input: { iron_plate: 1, coal: 1 },
+    output: { steel_plate: 1 },
+    duration: 4,
+    outputMode: 'belt',
+  },
+  advanced_circuit: {
+    input: { circuit_board: 1, steel_plate: 1 },
+    output: { advanced_circuit: 1 },
+    duration: 6,
     outputMode: 'inventory',
   },
 };

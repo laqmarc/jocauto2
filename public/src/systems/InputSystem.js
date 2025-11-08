@@ -61,6 +61,10 @@ export class InputSystem {
       this.state.emit('input:rotate');
     } else if (event.key.toLowerCase() === 'f') {
       this.state.emit('input:cycle-conveyor');
+    } else if (event.key.toLowerCase() === 'q') {
+      if (this.state.hoverTile) {
+        this.state.emit('input:cycle-depot', { tile: this.state.hoverTile });
+      }
     }
   }
 }

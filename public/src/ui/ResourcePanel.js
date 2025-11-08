@@ -51,6 +51,10 @@ export class ResourcePanel {
     this.renderLegendSection(this.legendProductTitle, this.legendProductList, productResources);
   }
 
+  refreshLegend() {
+    this.renderLegend();
+  }
+
   renderLegendSection(titleEl, listEl, resources) {
     if (!resources.length) {
       titleEl.classList.add('hidden');

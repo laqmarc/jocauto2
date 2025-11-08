@@ -23,6 +23,7 @@ export class BuildSystem {
     this.menu = new BuildMenu(this.state.panels.build, buildableList, {
       onSelect: (id) => this.setActiveBuild(id),
       getActive: () => this.activeBuildId,
+      getStatus: (def) => this.getBuildStatus(def),
     });
 
     this.handlePlace = (payload) => this.placeAt(payload.tile);
@@ -32,6 +33,7 @@ export class BuildSystem {
     this.state.on('input:remove', this.handleRemove);
     this.state.on('input:rotate', () => this.rotate());
     this.state.on('input:cycle-conveyor', () => this.cycleConveyorInput());
+    this.state.on('tier:changed', () => this.onTierChanged());
     this.updateOrientationLabel();
   }
 
@@ -54,6 +56,7 @@ export class BuildSystem {
   setActiveBuild(id) {
     this.activeBuildId = id;
     this.menu.highlightActive();
+    this.updateOrientationLabel();
   }
 
   rotate() {
@@ -74,7 +77,7 @@ export class BuildSystem {
     let text = directionLabels[orientation] || orientation;
     if (this.activeBuildId === 'conveyor') {
       const inputDir = this.getConveyorInputDirection(orientation);
-      text += ` · Entrada: ${directionLabels[inputDir] || inputDir}`;
+      text += ` - Entrada: ${directionLabels[inputDir] || inputDir}`;
     }
     this.menu.setOrientationLabel(text);
   }
@@ -183,6 +186,12 @@ export class BuildSystem {
       result.reason = 'Recursos insuficients';
       return result;
     }
+    const requiredTier = def.requiredTier || 1;
+    if ((this.state.progression?.tier || 1) < requiredTier) {
+      result.valid = false;
+      result.reason = `Necessita Tier ${requiredTier}`;
+      return result;
+    }
     if (def.type === 'conveyor' && overrides.inputDirection) {
       result.inputDirection = overrides.inputDirection;
     }
@@ -192,5 +201,20 @@ export class BuildSystem {
   getConveyorInputDirection(orientation) {
     const offset = this.conveyorInputOffsets[this.conveyorInputIndex] ?? 2;
     return rotateDirection(orientation, offset);
+  }
+
+  getBuildStatus(def) {
+    const requiredTier = def.requiredTier || 1;
+    const unlocked = (this.state.progression?.tier || 1) >= requiredTier;
+    return {
+      unlocked,
+      reason: unlocked ? null : `Necessita Tier ${requiredTier}`,
+    };
+  }
+
+  onTierChanged() {
+    this.menu.render();
+    this.menu.highlightActive();
+    this.updateOrientationLabel();
   }
 }

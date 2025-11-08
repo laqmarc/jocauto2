@@ -47,6 +47,9 @@ export function createEntityFromId(id, tile, orientation, overrides = {}) {
     return null;
   }
   const entity = ctor(def, tile, orientation, overrides);
+  if (entity.type === 'depot' && overrides.outputResource) {
+    entity.outputResource = overrides.outputResource;
+  }
   entity.buildId = def.id;
   return entity;
 }
@@ -63,6 +66,8 @@ export function entityToSnapshot(entity) {
   };
   if (entity.type === 'conveyor') {
     snapshot.inputDirection = entity.inputDirection;
+  } else if (entity.type === 'depot') {
+    snapshot.outputResource = entity.outputResource;
   }
   return snapshot;
 }

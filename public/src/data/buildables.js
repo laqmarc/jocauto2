@@ -38,6 +38,7 @@ export const buildableList = [
     speed: 2,
     color: '#5ac8fa',
     cost: { iron_plate: 1 },
+    requiredTier: 1,
   },
   {
     id: 'depot',
@@ -45,6 +46,7 @@ export const buildableList = [
     label: 'Diposit',
     color: '#7cd67b',
     cost: { iron_plate: 4 },
+    requiredTier: 1,
   },
   {
     id: 'iron_miner',
@@ -55,6 +57,7 @@ export const buildableList = [
     color: '#f7b733',
     cost: { iron_plate: 12 },
     requiresResource: 'iron_ore',
+    requiredTier: 1,
   },
   {
     id: 'copper_miner',
@@ -65,6 +68,7 @@ export const buildableList = [
     color: '#ffcc80',
     cost: { iron_plate: 12 },
     requiresResource: 'copper_ore',
+    requiredTier: 1,
   },
   {
     id: 'iron_furnace',
@@ -73,6 +77,7 @@ export const buildableList = [
     recipe: 'iron_plate',
     color: '#ff6f61',
     cost: { iron_plate: 10 },
+    requiredTier: 1,
   },
   {
     id: 'copper_furnace',
@@ -81,6 +86,7 @@ export const buildableList = [
     recipe: 'copper_plate',
     color: '#ffab76',
     cost: { iron_plate: 10 },
+    requiredTier: 1,
   },
   {
     id: 'wire_drawer',
@@ -89,6 +95,7 @@ export const buildableList = [
     recipe: 'copper_wire',
     color: '#ffb347',
     cost: { iron_plate: 10, copper_plate: 6 },
+    requiredTier: 1,
   },
   {
     id: 'gear_press',
@@ -97,6 +104,7 @@ export const buildableList = [
     recipe: 'iron_gear',
     color: '#7c9bb5',
     cost: { iron_plate: 14 },
+    requiredTier: 1,
   },
   {
     id: 'circuit_assembler',
@@ -105,6 +113,38 @@ export const buildableList = [
     recipe: 'circuit_board',
     color: '#52d8b2',
     cost: { iron_plate: 18, copper_wire: 6 },
+    extraInputOffsets: [1, -1],
+    requiredTier: 1,
+  },
+  {
+    id: 'coal_miner',
+    type: 'producer',
+    label: 'Miner de carbó',
+    output: 'coal',
+    interval: 2,
+    color: '#3a4450',
+    cost: { iron_plate: 18, circuit_board: 4 },
+    requiresResource: 'coal',
+    requiredTier: 2,
+  },
+  {
+    id: 'steel_forge',
+    type: 'consumer',
+    label: "Farga d'acer",
+    recipe: 'steel_plate',
+    color: '#8c9faa',
+    cost: { iron_plate: 20, coal: 5 },
+    requiredTier: 2,
+    extraInputOffsets: [1, -1],
+  },
+  {
+    id: 'advanced_assembler',
+    type: 'consumer',
+    label: 'Assembler avançat',
+    recipe: 'advanced_circuit',
+    color: '#34d399',
+    cost: { steel_plate: 10, circuit_board: 5 },
+    requiredTier: 2,
     extraInputOffsets: [1, -1],
   },
 ];

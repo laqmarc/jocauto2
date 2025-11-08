@@ -10,6 +10,7 @@ export class Storage {
         .map((entity) => entityToSnapshot(entity))
         .filter(Boolean),
       resources: state.getResourceSnapshot(),
+      progression: state.progression,
       savedAt: Date.now(),
     };
     try {
@@ -40,6 +41,7 @@ export class Storage {
     state.setInventory(data.inventory || {});
     state.clearEntities();
     state.initializeResourceField(data.resources);
+    state.setProgression(data.progression);
     if (Array.isArray(data.entities)) {
       data.entities.forEach((snapshot) => {
         const entity = createEntityFromId(
@@ -53,6 +55,9 @@ export class Storage {
         }
       });
     }
+    state.resourcePanel?.refreshLegend();
+    state.recipePanel?.render();
+    state.emit('tier:changed', { tier: state.progression.tier });
     state.refreshPanels();
     return true;
   }

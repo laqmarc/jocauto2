@@ -34,6 +34,7 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
 - **Tecles**:
 - `R`: rota la sortida de l’edifici seleccionat (Nord → Est → Sud → Oest).
 - `F`: (només cintes) canvia la direcció d'entrada preferida; les cintes accepten automàticament entrades frontal i laterals, però amb `F` pots forçar quin port es destaca.
+- `Q`: mentre apuntes a un `Dipòsit`, cicla quin recurs de l’inventari vols que expulsi per la sortida (cal que hi hagi stock).
 
 ### HUD (panell dret)
 1. **Recursos**: inventari actual i llegenda de vetes/productes.
@@ -51,21 +52,32 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
    - `Filadora` converteix planxes de coure en fil.
    - `Premsa d'engranatges` usa planxes de ferro per produir engranatges.
    - `Assembler de circuits` consumeix fil de coure + planxes de ferro (recorda connectar-li dues cintes: una al port oest i l'altra a qualsevol dels ports lateral) i diposita els circuits directament a l'inventari.
-5. **Recull**: connecta la sortida de cada màquina a una cinta i finalitza-la en un `Diposit` o en una altra màquina. Els dipòsits accepten recursos pels quatre costats i els retornen a l’inventari.
+5. **Recull**: connecta la sortida de cada màquina a una cinta i finalitza-la en un `Diposit` o en una altra màquina. Els dipòsits accepten recursos pels quatre costats, els envien a l’inventari i, si els configures amb `Q`, poden tornar a expel·lir el recurs seleccionat cap a la seva cara frontal.
 6. **Gestiona recursos**: vigila el panell de recursos per assegurar-te que pots pagar el cost de nous edificis (els botons indiquen el cost exacte).
 
+## Milestones i Tier 2
+1. **Tier 1 (inici)**: Totes les vetes disponibles són de ferro i coure. L’objectiu és construir la cadena fins a obtenir circuits (`Assembler de circuits`).
+2. **Milestone – 100 circuits**: quan l’inventari acumula 100 `Circuit`, el `ProgressionSystem` activa el **Tier 2**:
+   - Es generen noves vetes de **Carbó** sobre el mapa.
+   - Es desbloquegen nous edificis (Miner de carbó, Farga d’acer i Assembler avançat).
+   - El panell de construcció mostra els edificis de Tier 2 i, si encara no els tens disponibles, indica “Necessita Tier 2”.
+3. **Tier 2**: Pots explotar carbó per combinar-lo amb planxes de ferro i obtenir `Planxa d'acer`, imprescindible per fabricar `Circuit avançat` i, per tant, per progressar cap al següent tier.
+
 ## Receptes i edificis
-| Edifici | Cost | Funció | Entrades | Sortides |
-|---------|------|--------|----------|----------|
-| Cinta | 1× Planxa de ferro | Mou ítems d'una cel·la a l'altra | 1 direcció d'entrada | 1 direcció de sortida |
-| Diposit | 4× Planxes de ferro | Emmagatzema recursos al teu inventari | Qualsevol direcció | — |
-| Miner de ferro | 12× Planxes de ferro | Extreu mineral de ferro | — | Mineral de ferro |
-| Miner de coure | 12× Planxes de ferro | Extreu mineral de coure | — | Mineral de coure |
-| Forn de ferro | 10× Planxes de ferro | Fondeix mineral de ferro | 2× Mineral de ferro | 1× Planxa de ferro (per cinta) |
-| Forn de coure | 10× Planxes de ferro | Fondeix mineral de coure | 2× Mineral de coure | 1× Planxa de coure (per cinta) |
-| Filadora | 10× Planxes de ferro, 6× Planxes de coure | Converteix planxes de coure en fil | 1× Planxa de coure | 2× Fil de coure (per cinta) |
-| Premsa d'engranatges | 14× Planxes de ferro | Fa engranatges de ferro | 2× Planxes de ferro | 1× Engranatge (per cinta) |
-| Assembler de circuits | 18× Planxes de ferro, 6× Fil de coure | Fa circuits | 2× Fil de coure, 1× Planxa de ferro | 1× Circuit (directe a inventari) |
+| Edifici | Tier | Cost | Funció | Entrades | Sortides |
+|---------|------|------|--------|----------|----------|
+| Cinta | 1 | 1× Planxa de ferro | Mou ítems d'una cel·la a l'altra | 1 direcció d'entrada | 1 direcció de sortida |
+| Diposit | 1 | 4× Planxes de ferro | Emmagatzema recursos al teu inventari | Qualsevol direcció | — |
+| Miner de ferro | 1 | 12× Planxes de ferro | Extreu mineral de ferro | — | Mineral de ferro |
+| Miner de coure | 1 | 12× Planxes de ferro | Extreu mineral de coure | — | Mineral de coure |
+| Forn de ferro | 1 | 10× Planxes de ferro | Converteix mineral de ferro en planxes | 2× Mineral de ferro | 1× Planxa de ferro (per cinta) |
+| Forn de coure | 1 | 10× Planxes de ferro | Converteix mineral de coure en planxes | 2× Mineral de coure | 1× Planxa de coure (per cinta) |
+| Filadora | 1 | 10× Planxes de ferro, 6× Planxes de coure | Produeix fil de coure | 1× Planxa de coure | 2× Fil de coure (per cinta) |
+| Premsa d'engranatges | 1 | 14× Planxes de ferro | Fa engranatges | 2× Planxes de ferro | 1× Engranatge (per cinta) |
+| Assembler de circuits | 1 | 18× Planxes de ferro, 6× Fil de coure | Fa circuits | 2× Fil de coure, 1× Planxa de ferro | 1× Circuit (inventari) |
+| Miner de carbó | 2 | 18× Planxes de ferro, 4× Circuit | Extreu carbó | Veta de carbó | Carbó |
+| Farga d'acer | 2 | 20× Planxes de ferro, 5× Carbó | Fusiona ferro + carbó | 1× Planxa de ferro, 1× Carbó | 1× Planxa d'acer (per cinta) |
+| Assembler avançat | 2 | 10× Planxa d'acer, 5× Circuit | Fa circuits avançats | 1× Planxa d'acer, 1× Circuit | 1× Circuit avançat (inventari) |
 
 > Consulta el panell de Receptes per a detalls visualment més compactes.
 

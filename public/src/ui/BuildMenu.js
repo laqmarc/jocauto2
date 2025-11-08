@@ -1,11 +1,12 @@
 import { resourceInfo } from '../data/recipes.js';
 
 export class BuildMenu {
-  constructor(container, buildables, { onSelect, getActive }) {
+  constructor(container, buildables, { onSelect, getActive, getStatus }) {
     this.container = container;
     this.buildables = buildables;
     this.onSelect = onSelect;
     this.getActive = getActive;
+    this.getStatus = getStatus || (() => ({ unlocked: true }));
     this.buttons = new Map();
     this.orientationLabel = document.createElement('p');
     this.render();
@@ -13,6 +14,7 @@ export class BuildMenu {
 
   render() {
     this.container.innerHTML = '';
+    this.buttons.clear();
     const title = document.createElement('h2');
     title.textContent = 'Construccio';
     this.orientationLabel.className = 'orientation-label';
@@ -22,6 +24,7 @@ export class BuildMenu {
     list.className = 'build-list';
 
     this.buildables.forEach((def) => {
+      const status = this.getStatus(def);
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.buildId = def.id;
@@ -31,9 +34,17 @@ export class BuildMenu {
       name.textContent = def.label;
       const cost = document.createElement('span');
       cost.className = 'build-cost';
-      cost.textContent = this.formatCost(def.cost);
+      cost.textContent = status.unlocked
+        ? this.formatCost(def.cost)
+        : status.reason || 'Bloquejat';
       button.append(name, cost);
-      button.addEventListener('click', () => this.select(def.id));
+      button.addEventListener('click', () => {
+        if (status.unlocked) {
+          this.select(def.id);
+        }
+      });
+      button.disabled = !status.unlocked;
+      button.classList.toggle('is-locked', !status.unlocked);
       this.buttons.set(def.id, button);
       list.appendChild(button);
     });

@@ -64,6 +64,35 @@ body {
   overflow-y: auto;
 }
 
+#controls-panel {
+  margin-top: 1rem;
+  overflow-y: auto;
+}
+
+.controls-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.controls-list li {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.key-cap {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid #355061;
+  border-radius: 4px;
+  font-family: "Fira Mono", monospace;
+  font-size: 0.8rem;
+  background: #16232b;
+}
+
 #status-panel {
   min-height: auto;
 }
@@ -146,6 +175,11 @@ body {
 .build-list button.is-active {
   background: #2f576a;
   border-color: #51a5d6;
+}
+
+.build-list button.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .build-name {

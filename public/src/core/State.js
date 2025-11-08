@@ -4,6 +4,7 @@ import { DebugPanel } from '../ui/DebugPanel.js';
 import { StatusPanel } from '../ui/StatusPanel.js';
 import { ResourceTooltip } from '../ui/ResourceTooltip.js';
 import { RecipePanel } from '../ui/RecipePanel.js';
+import { ControlsPanel } from '../ui/ControlsPanel.js';
 import { resourceInfo } from '../data/recipes.js';
 import { randomResourceField } from '../data/resourceField.js';
 
@@ -23,6 +24,7 @@ export class WorldState {
     this.conveyors = new Set();
     this.producers = new Set();
     this.consumers = new Set();
+    this.depots = new Set();
     this.initialInventory = {
       iron_plate: 25,
       iron_ore: 0,
@@ -31,8 +33,17 @@ export class WorldState {
       copper_wire: 0,
       iron_gear: 0,
       circuit_board: 0,
+      coal: 0,
+      steel_plate: 0,
+      advanced_circuit: 0,
     };
     this.inventory = { ...this.initialInventory };
+    this.progression = {
+      tier: 1,
+      milestones: {
+        tier2Unlocked: false,
+      },
+    };
     this.events = new Map();
     this.hoverTile = null;
     this.placementPreview = null;
@@ -43,6 +54,7 @@ export class WorldState {
     this.panels = {
       resources: document.getElementById('resource-panel'),
       build: document.getElementById('build-panel'),
+      controls: document.getElementById('controls-panel'),
       recipes: document.getElementById('recipe-panel'),
       status: document.getElementById('status-panel'),
       debug: document.getElementById('debug-panel'),
@@ -50,6 +62,7 @@ export class WorldState {
 
     this.resourcePanel = new ResourcePanel(this.panels.resources);
     this.recipePanel = new RecipePanel(this.panels.recipes);
+    this.controlsPanel = new ControlsPanel(this.panels.controls);
     this.statusPanel = new StatusPanel(this.panels.status);
     this.debugPanel = new DebugPanel(this.panels.debug);
     const tooltipElement = document.getElementById('resource-tooltip');
@@ -125,6 +138,8 @@ export class WorldState {
       this.producers.add(entity);
     } else if (entity.type === 'consumer') {
       this.consumers.add(entity);
+    } else if (entity.type === 'depot') {
+      this.depots.add(entity);
     }
     return true;
   }
@@ -137,6 +152,8 @@ export class WorldState {
       this.producers.delete(entity);
     } else if (entity.type === 'consumer') {
       this.consumers.delete(entity);
+    } else if (entity.type === 'depot') {
+      this.depots.delete(entity);
     }
     this.grid.clear(entity.position.x, entity.position.y, entity);
     entity.state = null;
@@ -181,6 +198,24 @@ export class WorldState {
 
   addResource(resource, amount = 1) {
     this.inventory[resource] = (this.inventory[resource] || 0) + amount;
+    this.emit('inventory:add', {
+      resource,
+      amount,
+      total: this.inventory[resource],
+    });
+  }
+
+  consumeResource(resource, amount = 1) {
+    if ((this.inventory[resource] || 0) < amount) {
+      return false;
+    }
+    this.inventory[resource] -= amount;
+    this.emit('inventory:remove', {
+      resource,
+      amount,
+      total: this.inventory[resource],
+    });
+    return true;
   }
 
   setInventory(values = {}) {
@@ -194,6 +229,28 @@ export class WorldState {
     this.inventory = { ...this.initialInventory };
   }
 
+  resetProgression() {
+    this.progression = {
+      tier: 1,
+      milestones: {
+        tier2Unlocked: false,
+      },
+    };
+  }
+
+  setProgression(progress = null) {
+    if (!progress) {
+      this.resetProgression();
+      return;
+    }
+    this.progression = {
+      tier: progress.tier ?? 1,
+      milestones: {
+        tier2Unlocked: Boolean(progress.milestones?.tier2Unlocked),
+      },
+    };
+  }
+
   clearEntities() {
     const existing = Array.from(this.entities);
     existing.forEach((entity) => this.removeEntity(entity));
@@ -204,8 +261,58 @@ export class WorldState {
   resetToDefaults() {
     this.clearEntities();
     this.resetInventory();
+    this.resetProgression();
     this.initializeResourceField();
     this.refreshPanels();
+  }
+
+  unlockTier2() {
+    if (this.progression.milestones.tier2Unlocked) {
+      return;
+    }
+    this.progression.tier = 2;
+    this.progression.milestones.tier2Unlocked = true;
+    this.scatterResourceDeposits('coal', {
+      clusters: Math.max(3, Math.round((this.width * this.height) * 0.012)),
+      radius: 3,
+      density: 0.55,
+    });
+    this.statusPanel?.showFeedback({
+      valid: true,
+      action: 'milestone',
+      message: 'Milestone: 100 circuits! Vetes de carbó desbloquejades.',
+    });
+    this.resourcePanel?.refreshLegend();
+    this.recipePanel?.render();
+    this.refreshPanels();
+    this.emit('tier:changed', { tier: this.progression.tier });
+  }
+
+  scatterResourceDeposits(type, { clusters = 5, radius = 3, density = 0.5 } = {}) {
+    for (let c = 0; c < clusters; c += 1) {
+      const cx = Math.floor(Math.random() * this.width);
+      const cy = Math.floor(Math.random() * this.height);
+      for (let dy = -radius; dy <= radius; dy += 1) {
+        for (let dx = -radius; dx <= radius; dx += 1) {
+          const x = cx + dx;
+          const y = cy + dy;
+          if (!this.grid.inBounds(x, y)) {
+            continue;
+          }
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance > radius) {
+            continue;
+          }
+          const falloff = 1 - distance / (radius + 0.5);
+          if (Math.random() < density * falloff) {
+            const idx = this.resourceIndex(x, y);
+            if (!this.resourceField[idx]) {
+              this.resourceField[idx] = type;
+            }
+          }
+        }
+      }
+    }
   }
 
   initializeResourceField(snapshot = null) {
