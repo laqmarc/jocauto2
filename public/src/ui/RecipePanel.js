@@ -3,38 +3,12 @@ import { recipes, resourceInfo } from '../data/recipes.js';
 export class RecipePanel {
   constructor(container) {
     this.container = container;
-    this.collapsed = true;
-    this.header = document.createElement('div');
-    this.header.className = 'panel-header';
     this.title = document.createElement('h2');
     this.title.textContent = 'Receptes';
-    this.toggleButton = document.createElement('button');
-    this.toggleButton.type = 'button';
-    this.toggleButton.className = 'panel-toggle';
-    this.toggleButton.addEventListener('click', () => this.toggle());
-    this.header.append(this.title, this.toggleButton);
-
-    this.content = document.createElement('div');
-    this.content.className = 'recipe-content';
     this.list = document.createElement('div');
     this.list.className = 'recipe-list';
-    this.content.appendChild(this.list);
-
-    this.container.classList.add('collapsible-panel');
-    this.container.replaceChildren(this.header, this.content);
+    this.container.replaceChildren(this.title, this.list);
     this.render();
-    this.applyCollapseState();
-  }
-
-  toggle() {
-    this.collapsed = !this.collapsed;
-    this.applyCollapseState();
-  }
-
-  applyCollapseState() {
-    this.container.classList.toggle('is-collapsed', this.collapsed);
-    this.content.hidden = this.collapsed;
-    this.toggleButton.textContent = this.collapsed ? 'Mostrar' : 'Amagar';
   }
 
   render() {

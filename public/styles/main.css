@@ -13,6 +13,22 @@ body {
   color: #f4f7f9;
 }
 
+p.initialinfo {
+  border: 1px solid #2c4854;
+  padding: 0.25rem 0.5rem;
+  background: #13232c;
+  color: #fff;
+  max-width: fit-content;
+  margin: 0.5rem auto 1rem;
+  text-align: center;
+  border-radius: 8px;
+}
+
+p.initialinfo a {
+  color: #fff;
+  text-decoration: underline;
+}
+
 #app {
   display: flex;
   align-items: flex-start;
@@ -123,29 +139,6 @@ body {
 
 #status-panel {
   min-height: auto;
-}
-
-#recipe-panel.collapsible-panel {
-  max-height: none;
-}
-
-#recipe-panel .panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#recipe-panel .panel-toggle {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #2c4854;
-  background: #13232c;
-  color: inherit;
-  cursor: pointer;
-}
-
-#recipe-panel.collapsible-panel.is-collapsed .recipe-content {
-  display: none;
 }
 
 #tutorial-panel {
