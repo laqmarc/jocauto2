@@ -439,16 +439,26 @@ export class WorldState {
     const ctx = this.ctx;
     ctx.strokeStyle = '#15222c';
     ctx.lineWidth = 1;
-    for (let x = 0; x <= this.width; x += 1) {
+    const startX = Math.floor(this.camera.x);
+    const endX = Math.ceil(this.camera.x + this.viewWidth);
+    const startY = Math.floor(this.camera.y);
+    const endY = Math.ceil(this.camera.y + this.viewHeight);
+    const top = this.camera.y * this.tileSize;
+    const bottom = (this.camera.y + this.viewHeight) * this.tileSize;
+    const left = this.camera.x * this.tileSize;
+    const right = (this.camera.x + this.viewWidth) * this.tileSize;
+    for (let x = startX; x <= endX; x += 1) {
+      const px = x * this.tileSize + 0.5;
       ctx.beginPath();
-      ctx.moveTo(x * this.tileSize + 0.5, 0);
-      ctx.lineTo(x * this.tileSize + 0.5, this.canvas.height);
+      ctx.moveTo(px, top);
+      ctx.lineTo(px, bottom);
       ctx.stroke();
     }
-    for (let y = 0; y <= this.height; y += 1) {
+    for (let y = startY; y <= endY; y += 1) {
+      const py = y * this.tileSize + 0.5;
       ctx.beginPath();
-      ctx.moveTo(0, y * this.tileSize + 0.5);
-      ctx.lineTo(this.canvas.width, y * this.tileSize + 0.5);
+      ctx.moveTo(left, py);
+      ctx.lineTo(right, py);
       ctx.stroke();
     }
   }

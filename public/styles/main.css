@@ -98,14 +98,18 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  flex-direction: row;
+  gap: 1rem;
   font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
 .controls-list li {
   display: flex;
   gap: 0.5rem;
+  border: 1px solid #355061;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
 }
 
 .key-cap {
@@ -145,7 +149,7 @@ body {
 }
 
 #tutorial-panel {
-  min-height: 160px;
+  min-height: inherit;
 }
 
 .tutorial-body {
@@ -167,11 +171,11 @@ body {
 }
 
 .recipe-list {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .recipe-item {
@@ -242,6 +246,7 @@ body {
 }
 
 @media (max-width: 1400px) {
+
   #hud,
   .leftview {
     width: 280px;
