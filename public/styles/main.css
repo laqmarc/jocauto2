@@ -61,6 +61,8 @@ p.initialinfo a {
   align-self: stretch;
   max-width: 1280px;
   width: 100%;
+  overflow: hidden;
+
 }
 
 #game-canvas {
@@ -97,9 +99,12 @@ p.initialinfo a {
   overflow-y: auto;
 }
 
-#controls-panel {
-  margin-top: 1rem;
-  overflow-y: auto;
+#controls-panel,
+section#recipe-panel,
+#upgrade-panel {
+    margin-top: 1rem;
+    overflow-y: auto;
+    margin-bottom: 3rem;
 }
 
 .bottom {
@@ -142,7 +147,11 @@ p.initialinfo a {
 }
 
 #tutorial-panel {
-  min-height: inherit;
+    min-height: inherit;
+    border: 1px solid #2c4854;
+    padding: 2rem 1rem;
+    background: #13232c;
+    margin-top: 1rem;
 }
 
 .tutorial-body {
@@ -186,10 +195,6 @@ p.initialinfo a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-#upgrade-panel {
-  margin-top: 1rem;
 }
 
 .upgrade-list {
@@ -477,3 +482,5 @@ p.initialinfo a {
 #resource-tooltip.hidden {
   opacity: 0;
 }
+
+

@@ -22,6 +22,8 @@ export class WorldState {
     this.tileSize = tileSize;
     this.canvas.width = this.viewWidth * tileSize;
     this.canvas.height = this.viewHeight * tileSize;
+    this.canvas.style.width = `${this.canvas.width}px`;
+    this.canvas.style.height = `${this.canvas.height}px`;
 
     this.grid = new TileGrid(width, height);
     this.entities = new Set();
@@ -383,7 +385,7 @@ export class WorldState {
     const ctx = this.ctx;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#0d161d';
-    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.fillRect(0, 0, this.viewWidth * this.tileSize, this.viewHeight * this.tileSize);
     ctx.save();
     ctx.translate(-this.camera.x * this.tileSize, -this.camera.y * this.tileSize);
     this.drawResourceField();

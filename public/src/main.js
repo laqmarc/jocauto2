@@ -16,9 +16,9 @@ const worldState = new WorldState({
   canvas,
   width: 80,
   height: 45,
-  viewWidth: 32,
-  viewHeight: 18,
-  tileSize: 40,
+  viewWidth: 18,
+  viewHeight: 10,
+  tileSize: 72,
 });
 
 const engine = new Engine(worldState);
@@ -46,3 +46,4 @@ Benvingut/da a JOC – segueix construint!
 Fet per quexulo
 `);
 }
+

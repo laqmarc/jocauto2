@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Joc Auto 2D</title>
   <link rel="stylesheet" href="styles/main.css">
 </head>
+
 <body>
-  <p class="initialinfo">més info a <a href="https://github.com/laqmarc/jocauto2" target="blank">https://github.com/laqmarc/jocauto2</a> - joc fet per quexulo.cat</p>
+  <p class="initialinfo">més info a <a href="https://github.com/laqmarc/jocauto2"
+      target="blank">https://github.com/laqmarc/jocauto2</a> - joc fet per quexulo.cat</p>
   <div id="app">
     <div class="top">
-    <div class="leftview">
-      <section id="build-panel"></section>
-    </div>
-    <div id="canvas-wrapper">
-      <canvas id="game-canvas" width="1280" height="720"></canvas>
-      <div id="resource-tooltip" class="tooltip hidden"></div>
-      <section id="tutorial-panel"></section>
-            <section id="controls-panel"></section>
+      <div class="leftview">
+        <section id="build-panel"></section>
+      </div>
+      <div id="canvas-wrapper">
+        <canvas id="game-canvas" width="1280" height="720"></canvas>
+        <div id="resource-tooltip" class="tooltip hidden"></div>
+        <section id="tutorial-panel"></section>
+        <section id="controls-panel"></section>
+        <section id="recipe-panel"></section>
+        <section id="upgrade-panel"></section>
 
 
-    </div>
+      </div>
 
-    <div id="hud">
-      <section id="resource-panel"></section>
-      <section id="status-panel"></section>
-      <section id="debug-panel"></section>
-    </div>
+      <div id="hud">
+        <section id="resource-panel"></section>
+        <section id="status-panel"></section>
+        <section id="debug-panel"></section>
+      </div>
     </div>
     <div class="bottom">
-      <section id="recipe-panel"></section>
-      <section id="upgrade-panel"></section>
+
     </div>
   </div>
 
   <script type="module" src="src/main.js"></script>
 </body>
+
 </html>
