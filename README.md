@@ -1,7 +1,7 @@
 # Joc Auto 2D (HTML/JS)
 
 
-Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i JavaScript modular. Permet extraure recursos de vetes, transportar-los amb cintes i processar-los en màquines per obtenir productes més avançats.
+Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i JavaScript modular. Permet extraure recursos de vetes, transportar-los amb cintes i processar-los en màquines per obtenir productes més avançats. 
 
 ## Taula de continguts
 1. [Arquitectura i tecnologia](#arquitectura-i-tecnologia)
@@ -63,7 +63,7 @@ Simulador 2D d'automatització tipus Satisfactory construït amb HTML, CSS i Jav
    - Es desbloquegen nous edificis (Miner de carbó, Farga d’acer i Assembler avançat).
    - El panell de construcció mostra els edificis de Tier 2 i, si encara no els tens disponibles, indica “Necessita Tier 2”.
 3. **Tier 2**: Pots explotar carbó per combinar-lo amb planxes de ferro i obtenir `Planxa d'acer`, imprescindible per fabricar `Circuit avançat` i, per tant, per progressar cap al següent tier.
-4. **Upgrades**: amb la tecla `U` pots promocionar miners i forns (cost = 2x cost base + 5 circuits avan�ats), cintes (1 planxa d'acer + 1 circuit avan�at) i qualsevol edifici de Tier 2 (2x cost base + 10 circuits avan�ats). Les versions nivell 2 processen m�s r�pid o transporten m�s depressa, i el joc mostra una franja daurada per als edificis de Tier 2 i un distintiu verd "2" quan estan millorats.
+4. **Upgrades**: amb la tecla `U` pots promocionar miners i forns (cost = 2x cost base + 5 circuits avan�ats), cintes (1 planxa d'acer + 1 circuit avan�at) i qualsevol edifici de Tier 2 (2x cost base + 10 circuits avan�ats). Les versions nivell 2 processen m�s r�pid o transporten m�s depressa, i el joc mostra una franja daurada per als edificis de Tier 2 i un distintiu verd "2" quan estan millorats.
 
 ## Tiers
 ![Captura del joc](public/jocauto.png)
