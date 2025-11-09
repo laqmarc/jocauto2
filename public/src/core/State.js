@@ -49,6 +49,11 @@ export class WorldState {
       processing_unit: 0,
     };
     this.inventory = { ...this.initialInventory };
+    this.lastInventorySnapshot = { ...this.inventory };
+    this.resourceRates = {};
+    this.rateTimer = 0;
+    this.rateInterval = 15;
+    this.resetRateTracking();
     this.progression = {
       tier: 1,
       milestones: {
@@ -75,7 +80,7 @@ export class WorldState {
       debug: document.getElementById('debug-panel'),
     };
 
-    this.resourcePanel = new ResourcePanel(this.panels.resources);
+    this.resourcePanel = new ResourcePanel(this, this.panels.resources);
     this.recipePanel = new RecipePanel(this.panels.recipes);
     this.controlsPanel = new ControlsPanel(this.panels.controls);
     this.upgradePanel = new UpgradePanel(this.panels.upgrades);
@@ -94,6 +99,11 @@ export class WorldState {
 
   setDelta(delta) {
     this.lastDelta = delta;
+    this.rateTimer += delta;
+    if (this.rateTimer >= this.rateInterval) {
+      this.computeResourceRates(this.rateTimer);
+      this.rateTimer = 0;
+    }
   }
 
   on(event, handler) {
@@ -240,10 +250,12 @@ export class WorldState {
     Object.entries(values).forEach(([resource, amount]) => {
       this.inventory[resource] = amount;
     });
+    this.resetRateTracking();
   }
 
   resetInventory() {
     this.inventory = { ...this.initialInventory };
+    this.resetRateTracking();
   }
 
   resetProgression() {
@@ -254,6 +266,12 @@ export class WorldState {
         tier3Unlocked: false,
       },
     };
+  }
+
+  resetRateTracking() {
+    this.lastInventorySnapshot = { ...this.inventory };
+    this.resourceRates = {};
+    this.rateTimer = 0;
   }
 
   setProgression(progress = null) {
@@ -282,6 +300,7 @@ export class WorldState {
     this.resetInventory();
     this.resetProgression();
     this.initializeResourceField();
+    this.resetRateTracking();
     this.refreshPanels();
   }
 
@@ -549,5 +568,24 @@ export class WorldState {
     const maxY = Math.max(0, this.height - this.viewHeight);
     this.camera.x = Math.max(0, Math.min(maxX, this.camera.x + dx));
     this.camera.y = Math.max(0, Math.min(maxY, this.camera.y + dy));
+  }
+
+  computeResourceRates(elapsed) {
+    if (!elapsed) {
+      return;
+    }
+    const rates = {};
+    const snapshot = this.lastInventorySnapshot || {};
+    Object.keys(this.inventory).forEach((resource) => {
+      const prev = snapshot[resource] ?? 0;
+      const curr = this.inventory[resource] ?? 0;
+      rates[resource] = (curr - prev) / elapsed;
+      snapshot[resource] = curr;
+    });
+    this.resourceRates = rates;
+  }
+
+  getResourceRate(resource) {
+    return this.resourceRates[resource] || 0;
   }
 }

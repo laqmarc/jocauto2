@@ -499,3 +499,10 @@ section#recipe-panel,
 #resource-tooltip.hidden {
   opacity: 0;
 }
+.resource-table { width:100%; border-collapse: collapse; }
+.resource-table th, .resource-table td { padding: 4px 6px; border-bottom: 1px solid #1e3842; text-align: left; }
+.resource-table td:nth-child(2), .resource-table td:nth-child(3) { text-align: right; }
+.rate-positive { color:#4ade80; }
+.rate-negative { color:#ff6b6b; }
+.rate-neutral { color:#a7c4d5; }
+

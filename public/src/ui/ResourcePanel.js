@@ -1,12 +1,18 @@
 import { resourceInfo } from '../data/recipes.js';
 
 export class ResourcePanel {
-  constructor(container) {
+  constructor(state, container) {
+    this.state = state;
     this.container = container;
     this.title = document.createElement('h2');
     this.title.textContent = 'Recursos';
-    this.list = document.createElement('dl');
-    this.list.className = 'resource-list';
+    this.table = document.createElement('table');
+    this.table.className = 'resource-table';
+    const head = document.createElement('thead');
+    head.innerHTML = '<tr><th>Recurs</th><th>Quantitat</th><th>Flux</th></tr>';
+    this.table.append(head);
+    this.tbody = document.createElement('tbody');
+    this.table.append(this.tbody);
 
     this.legendFieldTitle = document.createElement('h3');
     this.legendFieldTitle.textContent = 'Vetes';
@@ -20,7 +26,7 @@ export class ResourcePanel {
 
     this.container.replaceChildren(
       this.title,
-      this.list,
+      this.table,
       this.legendFieldTitle,
       this.legendFieldList,
       this.legendProductTitle,
@@ -30,15 +36,24 @@ export class ResourcePanel {
   }
 
   update(inventory) {
-    this.list.innerHTML = '';
+    this.tbody.innerHTML = '';
     Object.entries(inventory)
       .sort()
       .forEach(([resource, amount]) => {
-        const term = document.createElement('dt');
-        term.textContent = resourceInfo[resource]?.label || resource;
-        const value = document.createElement('dd');
-        value.textContent = amount.toFixed ? amount.toFixed(0) : String(amount);
-        this.list.append(term, value);
+        const row = document.createElement('tr');
+        const resourceCell = document.createElement('td');
+        resourceCell.textContent = resourceInfo[resource]?.label || resource;
+        const amountCell = document.createElement('td');
+        const formattedAmount =
+          typeof amount === 'number' && Number.isFinite(amount) ? amount.toFixed(0) : String(amount);
+        const rate = this.state.getResourceRate(resource);
+        const rateText = this.formatRate(rate);
+        amountCell.textContent = formattedAmount;
+        const rateCell = document.createElement('td');
+        rateCell.textContent = rateText;
+        rateCell.className = rate > 0 ? 'rate-positive' : rate < 0 ? 'rate-negative' : 'rate-neutral';
+        row.append(resourceCell, amountCell, rateCell);
+        this.tbody.appendChild(row);
       });
   }
 
@@ -72,5 +87,13 @@ export class ResourcePanel {
       item.append(swatch, info.label || key);
       listEl.appendChild(item);
     });
+  }
+
+  formatRate(rate) {
+    if (!rate || Math.abs(rate) < 0.05) {
+      return '';
+    }
+    const sign = rate > 0 ? '+' : '';
+    return ` (${sign}${rate.toFixed(1)}/s)`;
   }
 }
