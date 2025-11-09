@@ -15,8 +15,9 @@ export class BuildMenu {
   render() {
     this.container.innerHTML = '';
     this.buttons.clear();
-    const title = document.createElement('h2');
+    const title = document.createElement('p');
     title.textContent = 'Construccio';
+    title.className = 'build-menu-title';
     this.orientationLabel.className = 'orientation-label';
     this.orientationLabel.textContent = 'Orientacio: Est';
 

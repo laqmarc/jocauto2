@@ -10,14 +10,20 @@
 </head>
 
 <body>
-  <p class="initialinfo">més info a <a href="https://github.com/laqmarc/jocauto2"
-      target="blank">https://github.com/laqmarc/jocauto2</a> - joc fet per quexulo.cat</p>
+  <!-- <p class="initialinfo">més info a <a href="https://github.com/laqmarc/jocauto2"
+      target="blank">https://github.com/laqmarc/jocauto2</a> - joc fet per quexulo.cat</p> -->
+  <div class="topypanel">
+    <section id="status-panel"></section>
+    <section id="mobile-toolbar"></section>
+    <section id="build-panel"></section>
+  </div>
   <div id="app">
     <div class="top">
       <div class="leftview">
-        <section id="build-panel"></section>
+
       </div>
       <div id="canvas-wrapper">
+
         <canvas id="game-canvas" width="1280" height="720"></canvas>
         <div id="resource-tooltip" class="tooltip hidden"></div>
         <section id="tutorial-panel"></section>
@@ -29,7 +35,6 @@
       </div>
 
       <div id="hud">
-                <section id="status-panel"></section>
 
         <section id="resource-panel"></section>
         <section id="debug-panel"></section>

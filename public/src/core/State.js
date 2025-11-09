@@ -7,6 +7,7 @@ import { RecipePanel } from '../ui/RecipePanel.js';
 import { ControlsPanel } from '../ui/ControlsPanel.js';
 import { UpgradePanel } from '../ui/UpgradePanel.js';
 import { TutorialPanel } from '../ui/TutorialPanel.js';
+import { MobileToolbar } from '../ui/MobileToolbar.js';
 import { resourceInfo } from '../data/recipes.js';
 import { randomResourceField } from '../data/resourceField.js';
 
@@ -19,11 +20,9 @@ export class WorldState {
     this.height = height;
     this.viewWidth = viewWidth ?? width;
     this.viewHeight = viewHeight ?? height;
+    this.baseTileSize = tileSize;
     this.tileSize = tileSize;
-    this.canvas.width = this.viewWidth * tileSize;
-    this.canvas.height = this.viewHeight * tileSize;
-    this.canvas.style.width = `${this.canvas.width}px`;
-    this.canvas.style.height = `${this.canvas.height}px`;
+    this.setCanvasResolution(tileSize);
 
     this.grid = new TileGrid(width, height);
     this.entities = new Set();
@@ -76,6 +75,7 @@ export class WorldState {
       recipes: document.getElementById('recipe-panel'),
       upgrades: document.getElementById('upgrade-panel'),
       tutorial: document.getElementById('tutorial-panel'),
+      touch: document.getElementById('mobile-toolbar'),
       status: document.getElementById('status-panel'),
       debug: document.getElementById('debug-panel'),
     };
@@ -85,6 +85,7 @@ export class WorldState {
     this.controlsPanel = new ControlsPanel(this.panels.controls);
     this.upgradePanel = new UpgradePanel(this.panels.upgrades);
     this.tutorialPanel = new TutorialPanel(this.panels.tutorial);
+    this.touchToolbar = new MobileToolbar(this, this.panels.touch);
     this.statusPanel = new StatusPanel(this.panels.status);
     this.debugPanel = new DebugPanel(this.panels.debug);
     const tooltipElement = document.getElementById('resource-tooltip');
@@ -93,6 +94,9 @@ export class WorldState {
       this.resourceTooltip.bind(this);
     }
     this.initializeResourceField();
+    this.handleResize = () => this.resizeToWrapper();
+    window.addEventListener('resize', this.handleResize);
+    this.resizeToWrapper();
     this.on('build:feedback', (payload) => this.statusPanel?.showFeedback(payload));
     this.refreshPanels();
   }
@@ -151,6 +155,27 @@ export class WorldState {
 
   clearPlacementPreview() {
     this.placementPreview = null;
+  }
+
+  setCanvasResolution(tileSize) {
+    const resolved = Math.max(12, tileSize);
+    this.tileSize = resolved;
+    this.canvas.width = Math.round(this.viewWidth * resolved);
+    this.canvas.height = Math.round(this.viewHeight * resolved);
+    this.canvas.style.width = `${this.canvas.width}px`;
+    this.canvas.style.height = `${this.canvas.height}px`;
+  }
+
+  resizeToWrapper() {
+    if (!this.canvasWrapper) {
+      this.setCanvasResolution(this.baseTileSize);
+      return;
+    }
+    const wrapperWidth = this.canvasWrapper.clientWidth || (this.viewWidth * this.baseTileSize);
+    const maxWidth = this.viewWidth * this.baseTileSize;
+    const limitedWidth = Math.min(wrapperWidth, maxWidth);
+    const tileSize = Math.max(36, Math.floor(limitedWidth / this.viewWidth));
+    this.setCanvasResolution(tileSize || this.baseTileSize);
   }
 
   addEntity(entity) {
